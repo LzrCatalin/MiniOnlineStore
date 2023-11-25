@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link href="static/login_style.css" rel="stylesheet" type="text/css" media="all">
+	<title>Login Form</title>
+</head>
+<body>
+	<div class="container">
+		<div class="box">
+			<h2>Login</h2>
+			<form action="/login" method="post">
+				<input type="text" name="username" id="username" placeholder="Username" required/>
+				<br>
+				<input type="password" name="password" id="password" placeholder="Password" required/>
+				<br>
+				<input type="submit" class="button" value="Log In"/>
+			</form>
+			<!-- Add the registration button here -->
+			<a href="{{ url_for('register') }}" class="button register">Register</a>
+
+			{% if error_message %}
+				<p class="error-message">{{ error_message }}</p>
+			{% endif %}
+
+			{% if error_message %}
+				<p class="success-message">{{ error_message }}</p>
+			{% endif %}
+			
+		</div>
+
+		{% if users %}
+		<div class="users">
+			<h2>Registered Users List</h2>
+			<table>
+				{% for user in users %}
+				<tr>
+					<td>{{ user[0] }}</td>
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+		{% endif %}
+	</div>
+</body>
+</html>

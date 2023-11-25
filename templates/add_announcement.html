@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link href="static/register_style.css" rel="stylesheet" type="text/css" media="all">
+	<title>Add announcement</title>
+</head>
+<body>
+	<div class="container">
+		<h1>Add announcement</h1>
+		<div class="box">
+			<form action="/add_announcement" method="post" enctype="multipart/form-data">
+				<label for="category">category:</label>
+				<input type="text" name="category" id="category" placeholder="category" required/>
+				<br>
+				<label for="name">Name:</label>
+				<input type="text" name="name" id="name" placeholder="name" required/>
+				<br>
+				<label for="description">Description:</label>
+				<input type="text" name="description" id="description" placeholder="description" required/>
+				<br>
+                <label for="price">Price:</label>
+				<input type="real" name="price" id="price" placeholder="price" required/>
+				<br>
+				<!-- Add the file input for main photo of announcement -->
+				<label for="main_photo">Main Photo:</label>
+				<input type="file" name="main_photo" id="main_photo" accept="image/*">
+                <!-- Add the file input for main photo of announcement -->
+                <label for="secondary_photo_1">Secondary Photo 1:</label>
+				<input type="file" name="secondary_photo_1" id="secondary_photo_1" accept="image/*">
+                <label for="secondary_photo_2">Secondary Photo 2:</label>
+				<input type="file" name="secondary_photo_2" id="secondary_photo_2" accept="image/*">
+                <label for="secondary_photo_3">Secondary Photo 3:</label>
+				<input type="file" name="secondary_photo_3" id="secondary_photo_3" accept="image/*">
+				<br>
+				<input type="submit" class="button" value="Register Announcement"/>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

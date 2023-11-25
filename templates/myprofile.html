@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>My Profile</title>
+</head>
+<body>
+	<h1>Welcome, {{ user.name }}</h1>
+	<p>Email: {{ user.email }}</p>
+	<!-- Display other user information as needed -->
+	
+	<!-- Check if the image data is available -->
+	{% if img_str %}
+		<img src="data:image/jpeg;base64,{{ img_str }}" alt="Profile Picture">
+	{% else %}
+		<p>No profile picture available</p>
+	{% endif %}
+</body>
+</html>

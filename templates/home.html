@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home_style.css') }}">    <title>Home Page</title>
+</head>
+<body>
+	<nav>
+		<!--Nav Bar-->
+		<div class="logo_website">
+			<img src="{{ url_for('static', filename='link') }}" alt="Logo">
+		</div>
+		<div class="user_actions">
+			{% if 'logged_in' in session %}
+				<a href="{{ url_for('myprofile') }}"><button>My Profile</button></a>
+			{% else %}
+				<a href="{{ url_for('login') }}"><button>Login</button></a>
+				<a href="{{ url_for('register') }}"><button>Register</button></a>
+			{% endif %}
+			<a href="{{ url_for('add_announcement')}}"><button>Add announcement</button></a>
+		</div>
+		<!--End Nav Bar-->
+	</nav>
+</body>
+</html>

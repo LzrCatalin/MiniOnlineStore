@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link href="static/register_style.css" rel="stylesheet" type="text/css" media="all">
+	<title>Register</title>
+</head>
+<body>
+	<div class="container">
+		<h1>Create an Account</h1>
+		<div class="box">
+			<form action="/register" method="post" enctype="multipart/form-data">
+				<label for="username">Username:</label>
+				<input type="text" name="username" id="username" placeholder="Username" required/>
+				<br>
+				<label for="password">Password:</label>
+				<input type="text" name="password" id="password" placeholder="Password" required/>
+				<br>
+				<label for="email">Email:</label>
+				<input type="text" name="email" id="email" placeholder="Email" required/>
+				<br>
+				<!-- Add the file input for profile photo -->
+				<label for="profilePhoto">Profile Photo:</label>
+				<input type="file" name="profilePhoto" id="profilePhoto" accept="image/*">
+				<br>
+				<input type="submit" class="button" value="Register"/>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
