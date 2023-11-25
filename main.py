@@ -54,7 +54,7 @@ def home():
 		print ("Intra pe loggedin")
 		username = session['username']
 		print(username)
-		return render_template('home.html', username = username)
+		return render_template('index.html', username = username)
 	
 	else:
 		return render_template('login.html')
@@ -76,7 +76,7 @@ def login():
 			session['username'] = username
 			
 			users = user_db.retrieveUserFromUsersTable(username, password)
-			return render_template('home.html', users=users)
+			return render_template('index.html', users=users)
 		else:
 			error_message = "Username not found or incorrect password"
 	
@@ -194,7 +194,7 @@ def add_announcement():
 					return render_template('add_announcement.html', error_message="Announcement with the same category and name already exists in the database.")
 				else:
 					announcement_db.insertAnnouncementIntoAnnouncementsTable(id_user, category, name, description, price, main_photo, secondary_photo_1, secondary_photo_2, secondary_photo_3)
-					return render_template('home.html')
+					return render_template('index.html')
 			else:
 				# Handle the case when no profile photo is uploaded
 				return render_template('add_announcement.html', error_message="Please upload photos for announcement.")
