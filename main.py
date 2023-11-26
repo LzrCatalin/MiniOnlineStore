@@ -18,7 +18,7 @@ from Announcementsdb import AnnouncementDataBase
 
 
 ###############################################################################
-UserDatabase_path = "git/src/data_bases/users_database.db"
+UserDatabase_path = "src/data_bases/users_database.db"
 AnnouncementsDatabase_path = "src/data_bases/announcements_database.db"
 
 user_db = None
