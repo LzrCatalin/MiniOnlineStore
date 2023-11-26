@@ -1,14 +1,14 @@
 import io
 import base64
 from PIL import Image
-
-from flask import Flask, request, render_template, session
+from flask import Flask, render_template, request, redirect, url_for, session
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 #
 #	Add the path to the project so that the imports work
 #
 import sys
-sys.path.append("/home/catalin/workspace/project_individual/src")
+sys.path.append("/home/catalin/workspace/git/MiniOnlineStore/src")
 
 #
 #	Import the database classes
@@ -16,54 +16,68 @@ sys.path.append("/home/catalin/workspace/project_individual/src")
 from Usersdb import UserDatabase
 from Announcementsdb import AnnouncementDataBase
 
-#
-#	Establish connection to the databases
-#
-UserDatabase_path = "/home/catalin/workspace/project_individual/src/data_bases/users_database.db"
-user_db = UserDatabase(UserDatabase_path)
 
-AnnouncementsDatabase_path = "/home/catalin/workspace/project_individual/src/data_bases/announcements_database.db"
-announcement_db = AnnouncementDataBase(AnnouncementsDatabase_path)
+###############################################################################
+UserDatabase_path = "git/src/data_bases/users_database.db"
+AnnouncementsDatabase_path = "src/data_bases/announcements_database.db"
 
-#
-#	MAIN 
-#
-if __name__ == '__main__':
+user_db = None
+announcement_db = None
 
-	user_db.insertUserIntoUsersTable("carmen", "carmen@gmail.com", "1234", "/home/catalin/workspace/project_individual/src/users_photos/images.png")
-	
-	announcement_db.insertAnnouncementIntoAnnouncementsTable(2, "Automobile", "BMW", "Laptop in perfect condition", 1000, 
-														  "/home/catalin/workspace/project_individual/src/users_photos/images.png",
-														  "/home/catalin/workspace/project_individual/src/users_photos/images.png",
-														  "/home/catalin/workspace/project_individual/src/users_photos/images.png",
-														  "/home/catalin/workspace/project_individual/src/users_photos/images.png")
-	
+
+###############################################################################
+#
+# Application config
+#
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'
+app.secret_key = 'my_secret_key'
 
 #
-#	Home page
+# Login config
 #
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+
+
+###############################################################################
+#
+# Logged in users
+#
+users = {}
+
+class User(UserMixin):
+	def __init__(self, user_id):
+		self.id = user_id
+
+
+###############################################################################
+
+@login_manager.user_loader
+def load_user(user_id):
+	return users.get(user_id)
+
+
+# Home
 @app.route('/')
-def home():
+def index():
+	global user_db
+	global announcement_db
 
-	print(session)
+	# If user not authenticated, force authentication
+	if not current_user.is_authenticated:
+		return redirect(url_for('login'))
 
-	if 'logged_in' in session:
-		print ("Intra pe loggedin")
-		username = session['username']
-		print(username)
-		return render_template('index.html', username = username)
-	
-	else:
-		return render_template('login.html')
+	# TODO: Debug
+	print(f'Current user = {current_user.id}')
+	return render_template('index.html')
 
-#
-#	Login page
-#
+
+# Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+	global user_db
+	global announcement_db
 	error_message = None
 
 	if request.method == 'POST':
@@ -71,23 +85,30 @@ def login():
 		username = request.form['username']
 		password = request.form['password']
 
+		# Validate user in database
 		if user_db.checkUserInDatabaseForLogin(username, password):
-			session['logged_in'] = True
-			session['username'] = username
-			
-			users = user_db.retrieveUserFromUsersTable(username, password)
-			return render_template('index.html', users=users)
+			# If does not exist in logged users, create a new user and
+			# add it to the logged users list
+			new_logged_user = User(username)
+			users[username] = new_logged_user
+
+			# Log user in
+			login_user(users[username])
+
+			# Move to home page
+			return redirect(url_for('index'))
 		else:
 			error_message = "Username not found or incorrect password"
-	
-	print("GET method called")
+
 	return render_template('login.html', error_message = error_message)
 
-#
-#	Register page
-#
+
+# Register page
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+	global user_db
+	global announcement_db
+
 	if request.method == 'POST':
 		username = request.form['username']
 		email = request.form['email']
@@ -106,7 +127,7 @@ def register():
 				return render_template('register.html', error_message="User with the same name or email already exists in the database.")
 			else:
 				user_db.insertUserIntoUsersTable(username, email, password, profile_photo)
-				return render_template('login.html')
+				return redirect(url_for('login'))
 		else:
 			# Handle the case when no profile photo is uploaded
 			return render_template('register.html', error_message="Please upload a profile photo.")
@@ -119,8 +140,12 @@ def register():
 #
 @app.route('/myprofile')
 def myprofile():
-	if 'logged_in' in session:
-		username = session['username']
+	global user_db
+	global announcement_db
+
+	# TODO: Use current_user as in index (DONE)
+	if current_user.is_authenticated:
+		username = current_user.id
 		user_data = user_db.retrieveUserFromUsersTableByName(username)
 
 		if user_data and len(user_data) > 0:
@@ -157,9 +182,12 @@ def myprofile():
 #
 @app.route('/add_announcement', methods=['GET', 'POST'])
 def add_announcement():
-	# User logged_in 
-	if 'logged_in' in session:
-		username = session['username']
+	global user_db
+	global announcement_db
+
+	# TODO: Use current_user as in index
+	if current_user.is_authenticated:
+		username = current_user.id
 
 		if request.method == 'POST':
 			id_user = user_db.retrieveUserId(username)
@@ -201,14 +229,38 @@ def add_announcement():
 		else:
 			return render_template('add_announcement.html')
 
-#		
-# 	Main
-# 	
+
+###############################################################################
+
+def db_init():
+	global user_db
+	global announcement_db
+
+	# users data base
+	user_db = UserDatabase(UserDatabase_path)
+	if user_db is None:
+		exit(1)
+
+	# announcement data base
+	announcement_db = AnnouncementDataBase(AnnouncementsDatabase_path)
+	if announcement_db is None:
+		exit(1)
+
+def demo_db_add():
+	user_db.insertUserIntoUsersTable("catalin", "catalin@gmail.com", "1234", "src/users_photos/images.png")
+	user_db.insertUserIntoUsersTable("razvan", "razvan@gmail.com", "1234", "src/users_photos/images.png")
+	announcement_db.insertAnnouncementIntoAnnouncementsTable(2, "Automobile", "BMW", "Laptop in perfect condition", 1000,
+														  "src/users_photos/images.png",
+														  "src/users_photos/images.png",
+														  "src/users_photos/images.png",
+														  "src/users_photos/images.png")
+
 if __name__ == '__main__':
+	# Initialize data bases
+	db_init()
+
+	# TODO: Demo to add entries in databases
+	demo_db_add()
+
+	# Start application
 	app.run(debug=True, host='0.0.0.0')
-
-#
-#	TO RESOLVE:
-#		SECONDARY PHOTOS FAILED TO CONVERT INTO BINARY FOR ADDIND INSIDE DATABASE (DONE)
-#
-
