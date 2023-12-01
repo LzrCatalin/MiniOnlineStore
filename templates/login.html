@@ -15,31 +15,14 @@
 				<br>
 				<input type="submit" class="button" value="Log In"/>
 			</form>
-			<!-- Add the registration button here -->
-			<a href="{{ url_for('register') }}" class="button register">Register</a>
+			<!-- Removed the registration button and added the message with a link -->
+			<p>Don't have an account? <a href="{{ url_for('register') }}">Create an account</a></p>
 
 			{% if error_message %}
 				<p class="error-message">{{ error_message }}</p>
 			{% endif %}
-
-			{% if error_message %}
-				<p class="success-message">{{ error_message }}</p>
-			{% endif %}
 			
 		</div>
-
-		{% if users %}
-		<div class="users">
-			<h2>Registered Users List</h2>
-			<table>
-				{% for user in users %}
-				<tr>
-					<td>{{ user[0] }}</td>
-				</tr>
-				{% endfor %}
-			</table>
-		</div>
-		{% endif %}
 	</div>
 </body>
 </html>

@@ -2,21 +2,25 @@
 <html lang="en">
 <head>
 	<link href="static/register_style.css" rel="stylesheet" type="text/css" media="all">
+	<script src="{{ url_for('static', filename='register.js') }}"></script> 
 	<title>Register</title>
 </head>
 <body>
 	<div class="container">
-		<h1>Create an Account</h1>
+		<h1>Sign Up</h1>
 		<div class="box">
 			<form action="/register" method="post" enctype="multipart/form-data">
 				<label for="username">Username:</label>
-				<input type="text" name="username" id="username" placeholder="Username" required/>
+				<input type="text" name="username" id="username" placeholder="Enter username" required/>
 				<br>
 				<label for="password">Password:</label>
-				<input type="text" name="password" id="password" placeholder="Password" required/>
+				<div class="password-input">
+					<input type="password" value="FakePSW" name="password" id="password" placeholder="Enter password" required/>
+					<span class="password-toggle" onclick="togglePasswordVisibility()"><i class="fa fa-eye" aria-hidden="true"></i></span>
+				</div>
 				<br>
 				<label for="email">Email:</label>
-				<input type="text" name="email" id="email" placeholder="Email" required/>
+				<input type="text" name="email" id="email" placeholder="Enter email" required/>
 				<br>
 				<!-- Add the file input for profile photo -->
 				<label for="profilePhoto">Profile Photo:</label>
@@ -24,6 +28,14 @@
 				<br>
 				<input type="submit" class="button" value="Register"/>
 			</form>
+
+			{% if error_message %}
+				<p class="error-message">{{ error_message }}</p>
+			{% endif %}
+
+			<!-- Added message and link for login -->
+			<p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+
 		</div>
 	</div>
 </body>

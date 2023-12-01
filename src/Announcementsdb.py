@@ -8,7 +8,7 @@ import uuid
 #	Add the path to the project so that the imports work
 #
 import sys
-sys.path.append("/home/catalin/workspace/project_individual/src")
+sys.path.append("/home/catalin/workspace/git/MiniOnlineStore/src")
 #
 #	Import the database classes
 #
@@ -16,7 +16,7 @@ from Usersdb import UserDatabase
 #
 #	Establish connection to the databases
 #
-UserDatabase_path = "/home/catalin/workspace/project_individual/src/data_bases/users_database.db"
+UserDatabase_path = "src/data_bases/users_database.db"
 user_db = UserDatabase(UserDatabase_path)
 
 class AnnouncementDataBase:
@@ -231,3 +231,69 @@ class AnnouncementDataBase:
 		except Exception as e:
 			print("Failed to save main photo:", str(e))
 			return None
+		
+	#
+	#	Function for searching if exists announcement by id_user	
+	#
+	def announcement_exists_by_id_user(self, id_user):
+		try:
+			with self.connect() as connect:
+				cursor = connect.cursor()
+				cursor.execute("SELECT * FROM announcements WHERE id_user = ?", (id_user,))
+				existing_announcement = cursor.fetchall()
+				return len(existing_announcement) > 0
+			
+		except sqlite3.Error as error:
+			print("Failed to retrieve from Announcements table", error)
+			return False
+
+	#
+	#	Retrieving announcements using id_user
+	#
+	def retrieveAnnouncementsFromAnnTableByIdUser(self, id_user):
+		try:
+			if self.announcement_exists_by_id_user(id_user):  # Call the existence check directly
+				with self.connect() as connect:
+					cursor = connect.cursor()
+					cursor.execute("SELECT category, name, description, price FROM announcements WHERE id_user=?", (id_user,))
+					announcements = cursor.fetchall()
+					print("Announcements retrieved successfully from announcements_database")
+					return announcements
+			else:
+				print(f"No announcements posted by user: {id_user}")
+				return []  # Return an empty list if no announcements exist
+		except sqlite3.Error as error:
+			print("Failed to retrieve from announcements table", error)
+			return []
+
+	#
+	#	Function for searching if exists announcement by id of announcement
+	#
+	def announcement_exists_by_id(self, id):
+		try:
+			with self.connect() as connect:
+				cursor = connect.cursor()
+				cursor.execute("SELECT * FROM announcements WHERE id = ?", (id,))
+				existing_announcement = cursor.fetchone()
+				return len(existing_announcement) > 0
+			
+		except sqlite3.Error as error:
+			print("Failed to retrieve from Announcements table", error)
+			return False
+	#
+	#	Retrieving announcements using id of announcement
+	#
+	def retrieveAnnouncementsFromAnnTableById(self, id):
+		try:
+			with self.connect() as connect:
+				cursor = connect.cursor()
+				if self.announcement_exists_by_id(id):
+						cursor.execute("SELECT * FROM announcements WHERE id = ?", (id,))
+						announcement = cursor.fetchone()
+						print(f"Announcement {id} retrieved succesfully from announcements_database")
+						return announcement
+				else:
+					print("Announcement not found!")
+
+		except sqlite3.Error as error:
+			print("Failed to retrieve from announcements table")

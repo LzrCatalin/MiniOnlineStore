@@ -211,7 +211,7 @@ class UserDatabase:
 	#	Function for retrieving id of user
 	#
 	def retrieveUserId(self, name):
-		try:
+		try: 
 			with self.connect() as connect:
 				cursor = connect.cursor()
 				if self.user_exists_with_name(cursor, name):
@@ -222,8 +222,7 @@ class UserDatabase:
 					else:
 						print("User with the same name does not exist in the database.")
 						return None  # Return None if user not found
+					
 		except sqlite3.Error as error:
 			print("Failed to retrieve from Users table", error)
 			return None  # Return None in case of any error
-
-

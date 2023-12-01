@@ -1,8 +1,10 @@
 import io
 import base64
+import os
 from PIL import Image
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_mail import Mail, Message
 
 #
 #	Add the path to the project so that the imports work
@@ -15,7 +17,6 @@ sys.path.append("/home/catalin/workspace/git/MiniOnlineStore/src")
 #
 from Usersdb import UserDatabase
 from Announcementsdb import AnnouncementDataBase
-
 
 ###############################################################################
 UserDatabase_path = "src/data_bases/users_database.db"
@@ -31,6 +32,7 @@ announcement_db = None
 #
 
 app = Flask(__name__)
+app.static_folder = 'static'
 app.secret_key = 'my_secret_key'
 
 #
@@ -39,6 +41,23 @@ app.secret_key = 'my_secret_key'
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
+#
+# Mail config
+#
+mail = Mail()
+def create_app():
+	global app, mail
+	
+	app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER')
+	app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 465)) 
+	app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+	app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+	app.config['MAIL_USE_TLS'] = True
+	app.config['MAIL_USE_SSL'] = False
+
+	mail.init_app(app)
+
+	return app
 
 ###############################################################################
 #
@@ -57,8 +76,9 @@ class User(UserMixin):
 def load_user(user_id):
 	return users.get(user_id)
 
-
+#
 # Home
+#
 @app.route('/')
 def index():
 	global user_db
@@ -66,14 +86,42 @@ def index():
 
 	# If user not authenticated, force authentication
 	if not current_user.is_authenticated:
-		return redirect(url_for('login'))
+		return render_template('index.html')
+	else:
+		username = current_user.id
+		user_data = user_db.retrieveUserFromUsersTableByName(username)	
 
+		if user_data and len(user_data) > 0:
+			user_info = user_data[0]
+			user = {
+				'name': user_info[1],
+				'photo': user_info[4]
+			}
+			
+			#
+			#	Convert the image to base64 for displaying it in the HTML
+			#
+			if user['photo']:
+				image = Image.open(io.BytesIO(user['photo']))
+				# Convert to RGB mode if the image mode is 'P' (palette mode)
+				if image.mode != 'RGB':
+					image = image.convert('RGB')
+
+				buffered = io.BytesIO()
+				image.save(buffered, format="JPEG") 
+				img_str = base64.b64encode(buffered.getvalue()).decode()
+
+				return render_template('index.html', user=user, img_str=img_str)
+			else:
+				return render_template('index.html', user=user, img_str=None)
 	# TODO: Debug
 	print(f'Current user = {current_user.id}')
-	return render_template('index.html')
+	#return render_template('index.html')
 
 
+#
 # Login
+#
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	global user_db
@@ -102,8 +150,9 @@ def login():
 
 	return render_template('login.html', error_message = error_message)
 
-
+#
 # Register page
+#
 @app.route('/register', methods=['GET', 'POST'])
 def register():
 	global user_db
@@ -127,6 +176,9 @@ def register():
 				return render_template('register.html', error_message="User with the same name or email already exists in the database.")
 			else:
 				user_db.insertUserIntoUsersTable(username, email, password, profile_photo)
+				
+				# Send registation mail
+				send_registration_email(username, email)
 				return redirect(url_for('login'))
 		else:
 			# Handle the case when no profile photo is uploaded
@@ -134,6 +186,23 @@ def register():
 	else:
 		print("Back to register")
 		return render_template('register.html')
+
+#
+#	Logout
+#
+@app.route('/logout')
+def logout():
+	global users
+
+	# Remove user from the users list
+	users.pop(current_user.id, None)
+
+	# Log the user using Flask-Login's logout_user function
+	logout_user()
+
+	# Redirect to the index page
+	print("Redirecting for logout")
+	return render_template('index.html')
 
 #
 #	My profile page
@@ -146,7 +215,7 @@ def myprofile():
 	# TODO: Use current_user as in index (DONE)
 	if current_user.is_authenticated:
 		username = current_user.id
-		user_data = user_db.retrieveUserFromUsersTableByName(username)
+		user_data = user_db.retrieveUserFromUsersTableByName(username)	
 
 		if user_data and len(user_data) > 0:
 			user_info = user_data[0]
@@ -156,10 +225,17 @@ def myprofile():
 				'photo': user_info[4]
 			}
 			
+			print("PRINTEZ")
+			print(user_info[0])
+			
+			#
+			#	Get tuple of announcements
+			#
+			announcements_data = announcement_db.retrieveAnnouncementsFromAnnTableByIdUser(user_info[0])
 			#
 			#	Convert the image to base64 for displaying it in the HTML
 			#
-			if user['photo']:
+			if user['photo'] and len(announcements_data) > 0:
 				image = Image.open(io.BytesIO(user['photo']))
 				# Convert to RGB mode if the image mode is 'P' (palette mode)
 				if image.mode != 'RGB':
@@ -169,9 +245,9 @@ def myprofile():
 				image.save(buffered, format="JPEG") 
 				img_str = base64.b64encode(buffered.getvalue()).decode()
 
-				return render_template('myprofile.html', user=user, img_str=img_str)
+				return render_template('myprofile.html', user=user, img_str=img_str, announcements_data = announcements_data)
 			else:
-				return render_template('myprofile.html', user=user, img_str=None)
+				return render_template('myprofile.html', user=user, img_str=None, announcements_data = announcements_data)
 		else:
 			return render_template('error.html', message="User data not found. Please log in again.")
 	else:
@@ -188,6 +264,35 @@ def add_announcement():
 	# TODO: Use current_user as in index
 	if current_user.is_authenticated:
 		username = current_user.id
+
+		#
+		#	TODO : Implement function for retrieving data of user after succesfully
+		# adding announcement 
+		#
+
+		# BEGIN OF THE LINES FOR FUNCTION
+		user_data = user_db.retrieveUserFromUsersTableByName(username)	
+
+		if user_data and len(user_data) > 0:
+			user_info = user_data[0]
+			user = {
+				'name': user_info[1],
+				'photo': user_info[4]
+			}
+			
+			#
+			#	Convert the image to base64 for displaying it in the HTML
+			#
+			if user['photo']:
+				image = Image.open(io.BytesIO(user['photo']))
+				# Convert to RGB mode if the image mode is 'P' (palette mode)
+				if image.mode != 'RGB':
+					image = image.convert('RGB')
+
+				buffered = io.BytesIO()
+				image.save(buffered, format="JPEG") 
+				img_str = base64.b64encode(buffered.getvalue()).decode()
+		# END OF LINES FOR FUNCTION
 
 		if request.method == 'POST':
 			id_user = user_db.retrieveUserId(username)
@@ -222,13 +327,23 @@ def add_announcement():
 					return render_template('add_announcement.html', error_message="Announcement with the same category and name already exists in the database.")
 				else:
 					announcement_db.insertAnnouncementIntoAnnouncementsTable(id_user, category, name, description, price, main_photo, secondary_photo_1, secondary_photo_2, secondary_photo_3)
-					return render_template('index.html')
+					return render_template('index.html', user = user, img_str = img_str)
 			else:
 				# Handle the case when no profile photo is uploaded
 				return render_template('add_announcement.html', error_message="Please upload photos for announcement.")
 		else:
 			return render_template('add_announcement.html')
+	else:
+		return render_template('login.html')
 
+#
+#	Announcement page
+#
+app.route('/announcement_page/<int:id>', methods=['GET', 'POST'])
+def display_announcement():
+	global announcement_db
+
+	# TODO : To the webpage like as myprofile for each announcement
 
 ###############################################################################
 
@@ -255,12 +370,28 @@ def demo_db_add():
 														  "src/users_photos/images.png",
 														  "src/users_photos/images.png")
 
+def send_registration_email(username, email):
+	try:
+		msg = Message('Welcome to Our Platform!', sender='your-email@example.com', recipients=[email])
+		msg.body = f'Hello, {username}!\n\nThank you for registering on our platform. We are excited to have you here.'
+		mail.send(msg)
+		print("Registration email sent successfully!")
+	except Exception as e:
+		print(f"Failed to send registration email: {str(e)}")
+
 if __name__ == '__main__':
+	
 	# Initialize data bases
 	db_init()
 
 	# TODO: Demo to add entries in databases
 	demo_db_add()
 
+	app = create_app()
+
 	# Start application
 	app.run(debug=True, host='0.0.0.0')
+
+	#
+	# TODO : RESOLVE CASE WHEN USER HAVE PHOTO BUT DONT HAVE ANNOUNCEMENTS ('/MYPROFILE')
+	#

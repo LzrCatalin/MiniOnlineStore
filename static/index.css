@@ -1,0 +1,184 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f9f9f9; /* OLX background color */
+}
+
+.logo_website img {
+    width: 100px;
+    height: auto;
+}
+
+/* Main Nav Bar */
+.main-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #002f34; /* OLX top bar color */
+    padding: 15px 20px; /* Increased padding top and bottom */
+    width: 100%;
+}
+
+.user_actions {
+    display: flex;
+    gap: 20px; /* Increased gap between icons */
+    align-items: center;
+}
+
+.user_actions a,
+.user_actions img {
+    width: 40px; /* Adjusted icon size */
+    height: 40px; /* Adjusted icon size */
+    cursor: pointer;
+    border-radius: 50%; /* Rounded profile picture */
+    margin-right: 10px; /* Add spacing between icons */
+}
+
+.user_actions button {
+    padding: 8px 16px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    background-color: #ffffff; /* OLX button color */
+    color: rgb(0, 0, 0); /* Button text color */
+}
+
+.user_actions img {
+    width: 40px; /* Adjust icon size */
+    height: 40px; /* Adjust icon size */
+    cursor: pointer;
+}
+
+.user_actions button:hover {
+    background-color: #4f4dbb; /* Hover state color */
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-link {
+    text-decoration: none;
+    color: white; /* Change text color */
+    font-size: 18px; /* Increase font size */
+}
+
+.profile-link span {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+/* Search container */
+.search-container {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 20px;
+}
+
+/* Search bar styles */
+.search-bar {
+	display: flex;
+	align-items: center;
+	background-color: #fff;
+	border-radius: 25px;
+	padding: 8px 15px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar input[type="text"] {
+	flex: 1;
+	border: none;
+	padding: 8px;
+	border-radius: 25px;
+	outline: none;
+}
+
+.search-bar .search-btn {
+	background-color: #4c2c9d; /* OLX search button color */
+	color: #fff;
+	border: none;
+	border-radius: 25px;
+	padding: 12px 24px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.search-bar .search-btn:hover {
+	background-color: #4f4dbb; /* Hover state color */
+}
+
+/* White line styles */
+.separator {
+	height: 2px;
+	background-color: #fff;
+	margin: 10px auto;
+	width: 50%;
+}
+
+/* Category title style */
+.category-title {
+	font-size: 24px;
+	font-weight: bold;
+	font-family: 'Arial', sans-serif;
+	margin-bottom: 20px; /* Increased space below the title */
+	color: #002f34; /* Text color */
+}
+
+/* Category name style */
+.category-name {
+	display: block;
+	font-size: 18px;
+	font-family: 'Arial', sans-serif;
+	margin-top: 15px; /* Adjusted space above the name */
+	color: #002f34; /* Text color */
+	text-align: center;
+	text-transform: capitalize; /* Capitalize the category names */
+}
+
+/* Categories styling */
+.categories {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	flex-wrap: wrap;
+	margin-top: 40px;
+}
+
+.categories a {
+	text-align: center;
+	width: calc(30% - 20px); /* Adjusted width with margin */
+	margin-bottom: 20px;
+	color: #002f34; /* Text color */
+	text-decoration: none; /* Remove underlines from links */
+	margin: 8px; /* Added margin around each item */
+	padding: 10px; /* Added padding around each item */
+	border-radius: 10px; /* Rounded corners */
+	background-color: #fff; /* Background color for each item */
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Box shadow effect */
+}
+
+.categories a:hover {
+	text-decoration: none; /* Remove underline on hover */
+}
+
+.categories a img {
+	width: 120px; /* Increased image size */
+	height: 120px; /* Increased image size */
+	border-radius: 50%;
+	margin-bottom: 10px;
+	border: 2px solid #002f34; /* Added border around images */
+}
+
+.categories a span {
+	display: block;
+	font-weight: bold;
+}
