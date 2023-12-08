@@ -15,8 +15,16 @@ class UserDatabase:
 		try:
 			with self.connect() as connect:
 				cursor = connect.cursor()
-				cursor.execute("CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT, password TEXT, photo BLOB)")
-				
+				cursor.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT, password TEXT, photo BLOB)")
+				#
+				# Check if the column exists before adding it
+				#
+				cursor.execute("PRAGMA table_info(users)")
+				columns = cursor.fetchall()
+				column_names = [column[1] for column in columns]
+				if 'confirmation_token' not in column_names:
+					cursor.execute("ALTER TABLE users ADD COLUMN confirmation_token TEXT")
+					print("Added confirmation_token column")
 				if not self.usersTableExists():
 					print("Users table successfully created")
 
@@ -91,15 +99,15 @@ class UserDatabase:
 	#
 	#	Function for inserting into table
 	#
-	def insertUserIntoUsersTable(self, name, email, password, photo):
+	def insertUserIntoUsersTable(self, name, email, password, photo, confirmation_token):
 		try:
 			with self.connect() as connect:
 				cursor = connect.cursor()
 				
 				if not self.user_exists_with_email(cursor, name, email):
 					user_photo = self.convertToBinaryData(photo)
-					sqlite_insert_with_param = "INSERT INTO users (name, email, password, photo) VALUES (?, ?, ?, ?)"
-					users_tuple = (name, email, password, user_photo)
+					sqlite_insert_with_param = "INSERT INTO users (name, email, password, photo, confirmation_token) VALUES (?, ?, ?, ?, ?)"
+					users_tuple = (name, email, password, user_photo, confirmation_token)
 
 					cursor.execute(sqlite_insert_with_param, users_tuple)
 					connect.commit()	
@@ -125,6 +133,25 @@ class UserDatabase:
 			except sqlite3.Error as error:
 				print("Failed to retrieve from Users table", error)
 				return False
+	
+	#
+	#	Function for checking if token is valid
+	#
+	def confirmation_token_exists(self, confirmation_token):
+		try:
+			with self.connect() as connect:
+				cursor = connect.cursor()
+				cursor.execute("SELECT * FROM users WHERE confirmation_token = ?", (confirmation_token,))
+				existing_token = cursor.fetchone()
+				print("CRAPA AICI 1")
+				return existing_token is not None
+			
+		except sqlite3.Error as error:
+			print("CRAPA AICI 2")
+			print("Failed to retrieve from Users table", error)
+			return False
+	
+	
 	#
 	#	Function for checking if user exists in the database for login
 	#
@@ -226,3 +253,21 @@ class UserDatabase:
 		except sqlite3.Error as error:
 			print("Failed to retrieve from Users table", error)
 			return None  # Return None in case of any error
+	
+	#
+	#	Function for retrieveing user using confirmation_token
+	#
+	def retrieveUserFromUsersTableByConfirmationToken(self, confirmation_token):
+		try:
+			with self.connect() as connect:
+				cursor = connect.cursor()
+				if self.confirmation_token_exists(confirmation_token):
+					cursor.execute("SELECT * FROM users WHERE confirmation_token = ?", (confirmation_token,))
+					users = cursor.fetchone()
+					print("Users retrieved successfully from users_database")
+					return users
+				else:
+					print("User with the same name does not exist in the database")
+		
+		except sqlite3.Error as error:
+			print("Failed to retrieve from Users table", error)

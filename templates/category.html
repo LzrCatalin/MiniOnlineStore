@@ -5,8 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}">
-	<title>Home Page</title>
-	<script src="{{ url_for('static', filename='index.js') }}"></script>
+	<title>Category - {{ category }}</title>
 </head>
 
 <body>
@@ -45,35 +44,24 @@
 
 	<div class="separator"></div>
 
-	<!-- Second Nav Bar with Search Bar -->
-	<div class="search-container">
-		<div class="search-bar">
-			<input type="text" placeholder="Search...">
-			<button class="search-btn">!<i class="fa fa-search"></i></button>
-		</div>
+	<div class="announcements">
+		<h1>Announcements for {{ category }}</h1>
+		<ul>
+			{% for announcement in announcements %}
+			<li>
+				<a href="{{ url_for('index') }}">
+				<strong>Name:</strong> {{ announcement.name }}<br>
+				<strong>Description:</strong> {{ announcement.description }}<br>
+				<strong>Price:</strong> {{ announcement.price }}<br>
+				{% if announcement.main_photo %}
+					<img src="data:image/jpeg;base64,{{ announcement.main_photo }}" alt="Announcement Image"><br>
+				{% endif %}
+				<!-- Add other announcement details as needed -->
+				</a>
+			</li>
+			{% endfor %}
+		</ul>
 	</div>
-
-	<div class="separator"></div>
-
-	<span class="category-title">Categorii principale</span>
-	<div class="categories">
-		<a href="{{ url_for('category', category='imobiliare') }}">			
-			<img src="{{ url_for('static', filename='categories_photos/imobiliare.png') }}" alt="Imobiliare Image">			
-			<span>Imobiliare</span>
-		</a>
-
-		<a href="{{ url_for('category', category='automobile') }}">
-			<img src="{{ url_for('static', filename='categories_photos/automobileicon.webp') }}" alt="Automobile Image">
-			<span>Automobile</span>
-		</a>
-
-		<a href="{{ url_for('category', category='servicii') }}">
-			<img src="{{ url_for('static', filename='categories_photos/servicii.png') }}" alt="Servicii Image">
-			<span>Servicii</span>
-		</a>
-		<!-- Categories content -->
-	</div>
-
 </body>
 
 </html>

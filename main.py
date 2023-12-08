@@ -1,6 +1,7 @@
 import io
 import base64
 import os
+import uuid
 from PIL import Image
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -10,7 +11,7 @@ from flask_mail import Mail, Message
 #	Add the path to the project so that the imports work
 #
 import sys
-sys.path.append("/home/catalin/workspace/git/MiniOnlineStore/src")
+sys.path.append("src")
 
 #
 #	Import the database classes
@@ -19,9 +20,13 @@ from Usersdb import UserDatabase
 from Announcementsdb import AnnouncementDataBase
 
 ###############################################################################
+
 UserDatabase_path = "src/data_bases/users_database.db"
 AnnouncementsDatabase_path = "src/data_bases/announcements_database.db"
 
+###############################################################################
+
+mail = None
 user_db = None
 announcement_db = None
 
@@ -40,24 +45,6 @@ app.secret_key = 'my_secret_key'
 #
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
-
-#
-# Mail config
-#
-mail = Mail()
-def create_app():
-	global app, mail
-	
-	app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER')
-	app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 465)) 
-	app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
-	app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
-	app.config['MAIL_USE_TLS'] = True
-	app.config['MAIL_USE_SSL'] = False
-
-	mail.init_app(app)
-
-	return app
 
 ###############################################################################
 #
@@ -116,8 +103,6 @@ def index():
 				return render_template('index.html', user=user, img_str=None)
 	# TODO: Debug
 	print(f'Current user = {current_user.id}')
-	#return render_template('index.html')
-
 
 #
 # Login
@@ -135,7 +120,7 @@ def login():
 
 		# Validate user in database
 		if user_db.checkUserInDatabaseForLogin(username, password):
-			# If does not exist in logged users, create a new user and
+			# If does not  exist in logged users, create a new user and
 			# add it to the logged users list
 			new_logged_user = User(username)
 			users[username] = new_logged_user
@@ -163,6 +148,9 @@ def register():
 		email = request.form['email']
 		password = request.form['password']
 
+		# Generate a unique confirmation token for the user
+		confirmation_token = str(uuid.uuid4())
+	
 		# Handle file upload
 		profile_photo = None
 		if 'profilePhoto' in request.files:
@@ -175,17 +163,41 @@ def register():
 			if user_db.checkUserInDatabaseForSignUp(username, email) == True:
 				return render_template('register.html', error_message="User with the same name or email already exists in the database.")
 			else:
-				user_db.insertUserIntoUsersTable(username, email, password, profile_photo)
+				user_db.insertUserIntoUsersTable(username, email, password, profile_photo, confirmation_token)
 				
 				# Send registation mail
-				send_registration_email(username, email)
-				return redirect(url_for('login'))
+				send_registration_email(username, email, confirmation_token)
+				
+				return render_template('after_register.html', email = email)
 		else:
 			# Handle the case when no profile photo is uploaded
 			return render_template('register.html', error_message="Please upload a profile photo.")
 	else:
 		print("Back to register")
 		return render_template('register.html')
+
+#
+#	Confirmation email 
+#
+@app.route('/confirm/<token>', methods = ['GET'])
+def confirm_email(token):
+	global user_db
+
+	if user_db.confirmation_token_exists(token):
+		user_data = user_db.retrieveUserFromUsersTableByConfirmationToken(token)
+		print("Printez user_data")
+		print(user_data)
+
+		if user_data and len(user_data) > 0:
+			user = {
+				'name': user_data[1],
+				'email': user_data[2],
+			}
+
+			return render_template('confirmation.html', user = user)
+		
+	else:
+		return render_template('index.html', message="User data not found. Please log in again.")
 
 #
 #	Logout
@@ -202,7 +214,7 @@ def logout():
 
 	# Redirect to the index page
 	print("Redirecting for logout")
-	return render_template('index.html')
+	return redirect(url_for('index'))
 
 #
 #	My profile page
@@ -251,7 +263,7 @@ def myprofile():
 		else:
 			return render_template('error.html', message="User data not found. Please log in again.")
 	else:
-		return render_template('login.html')
+		return redirect(url_for('login'))
 
 #
 #	Add announcement page
@@ -265,11 +277,6 @@ def add_announcement():
 	if current_user.is_authenticated:
 		username = current_user.id
 
-		#
-		#	TODO : Implement function for retrieving data of user after succesfully
-		# adding announcement 
-		#
-
 		# BEGIN OF THE LINES FOR FUNCTION
 		user_data = user_db.retrieveUserFromUsersTableByName(username)	
 
@@ -277,9 +284,15 @@ def add_announcement():
 			user_info = user_data[0]
 			user = {
 				'name': user_info[1],
+				'email': user_info[2],
 				'photo': user_info[4]
 			}
-			
+
+			#
+			#	Saving email for sending it further for email
+			# 			
+			email = user_info[2]
+
 			#
 			#	Convert the image to base64 for displaying it in the HTML
 			#
@@ -327,14 +340,79 @@ def add_announcement():
 					return render_template('add_announcement.html', error_message="Announcement with the same category and name already exists in the database.")
 				else:
 					announcement_db.insertAnnouncementIntoAnnouncementsTable(id_user, category, name, description, price, main_photo, secondary_photo_1, secondary_photo_2, secondary_photo_3)
-					return render_template('index.html', user = user, img_str = img_str)
+					
+					# Send email for succesfully adding announcement
+					send_announcement_added_email(email,category, name, description, price)
+
+					return redirect(url_for('index'))
 			else:
 				# Handle the case when no profile photo is uploaded
 				return render_template('add_announcement.html', error_message="Please upload photos for announcement.")
 		else:
 			return render_template('add_announcement.html')
 	else:
-		return render_template('login.html')
+		return redirect(url_for('login'))
+
+#
+#	Diplay announcements for each category
+#
+@app.route('/category', methods=['GET'])
+def category():
+	global announcement_db
+
+	category = request.args.get('category')
+	user = None
+	img_str = None
+	announcements = None
+
+	if current_user.is_authenticated:
+		username = current_user.id
+		user_data = user_db.retrieveUserFromUsersTableByName(username)
+
+		if user_data and len(user_data) > 0:
+			user_info = user_data[0]
+			user = {
+				'name': user_info[1],
+				'photo': user_info[4]
+			}
+
+			# Convert the image to base64 for displaying it in the HTML
+			if user['photo']:
+				image = Image.open(io.BytesIO(user['photo']))
+				if image.mode != 'RGB':
+					image = image.convert('RGB')
+
+				buffered = io.BytesIO()
+				image.save(buffered, format="JPEG") 
+				img_str = base64.b64encode(buffered.getvalue()).decode()
+
+	if category:
+		print(f"Chosen category: {category}")
+
+		announcements = announcement_db.retrieveAnnouncementsFromAnnTableByCategory(category)
+		announcements_list = []
+		
+		for announcement_data in announcements:
+			announcement = {
+				'name': announcement_data[3],
+				'description': announcement_data[4],
+				'price': announcement_data[5],
+				'main_photo': announcement_data[6] if announcement_data[6] else None
+			}
+			
+			if announcement['main_photo']:
+				image = Image.open(io.BytesIO(announcement['main_photo']))
+				if image.mode != 'RGB':
+					image = image.convert('RGB')
+
+				buffered = io.BytesIO()
+				image.save(buffered, format="JPEG") 
+				announcement['main_photo'] = base64.b64encode(buffered.getvalue()).decode()
+			
+			announcements_list.append(announcement)
+			print(announcement)
+
+	return render_template('category.html', user=user, img_str=img_str, announcements=announcements_list, category=category)
 
 #
 #	Announcement page
@@ -361,6 +439,20 @@ def db_init():
 	if announcement_db is None:
 		exit(1)
 
+
+def mail_init():
+	global app, mail
+
+	app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+	app.config['MAIL_PORT'] = 587
+	app.config['MAIL_USERNAME'] = 'tuyasmartbot@gmail.com'
+	app.config['MAIL_PASSWORD'] = 'mnyx svqq txkw rfsc '
+	app.config['MAIL_USE_TLS'] = True
+	app.config['MAIL_USE_SSL'] = False
+
+	mail = Mail(app)
+
+
 def demo_db_add():
 	user_db.insertUserIntoUsersTable("catalin", "catalin@gmail.com", "1234", "src/users_photos/images.png")
 	user_db.insertUserIntoUsersTable("razvan", "razvan@gmail.com", "1234", "src/users_photos/images.png")
@@ -370,28 +462,61 @@ def demo_db_add():
 														  "src/users_photos/images.png",
 														  "src/users_photos/images.png")
 
-def send_registration_email(username, email):
+#
+#	Mail message for register
+#
+def send_registration_email(username, email, confirmation_token):
+
+	#
+	# Generate link
+	#
+	confirmation_link = url_for('confirm_email', token = confirmation_token, _external=True)
+	
+	subject = "Welcome to Our Platform"
+	body = f'Hello, {username}!\n\nThank you for registering on our platform. Please click the following link to confirm your email and activate your account:\n\n{confirmation_link}'
+	sender = "tuyasmartbot@gmail.com"
+
 	try:
-		msg = Message('Welcome to Our Platform!', sender='your-email@example.com', recipients=[email])
-		msg.body = f'Hello, {username}!\n\nThank you for registering on our platform. We are excited to have you here.'
+		msg = Message(subject=subject, body = body, sender=sender, recipients=[email])
 		mail.send(msg)
 		print("Registration email sent successfully!")
 	except Exception as e:
 		print(f"Failed to send registration email: {str(e)}")
 
+#
+#	Mail message after adding announcement
+#
+def send_announcement_added_email(email, category, name, description, price): 
+	subject = "Your Announcement was Placed Successfully!"
+	body = f"Dear User,\n\nYour announcement for '{name}' in the category '{category}' has been successfully placed on our platform.\n\nDescription: {description}\nPrice: {price}\n\nThank you for using our platform!\n\nBest regards,\nThe Platform Team"
+	sender = "tuyasmartbot@gmail.com"
+
+	try:
+		msg = Message(subject=subject, body=body, sender=sender, recipients=[email])
+		mail.send(msg)
+		print("Announcement placement email sent successfully!")
+	except Exception as e:
+		print(f"Failed to send announcement placement email: {str(e)}")
+
+
 if __name__ == '__main__':
 	
 	# Initialize data bases
 	db_init()
+	# Initialize mail
+	mail_init()
 
 	# TODO: Demo to add entries in databases
-	demo_db_add()
-
-	app = create_app()
+	#demo_db_add()
 
 	# Start application
 	app.run(debug=True, host='0.0.0.0')
 
 	#
 	# TODO : RESOLVE CASE WHEN USER HAVE PHOTO BUT DONT HAVE ANNOUNCEMENTS ('/MYPROFILE')
+	#
+
+	#
+	# TODO : CREATE WEBPAGE FOR REDIRECTING USER AFTER REGISTER WITH MESSAGE TO CONFIRM 
+	#	ACCOUNT FROM MAIL
 	#

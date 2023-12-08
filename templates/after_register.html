@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Registration Success</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='after_register.css') }}">
+</head>
+<body>
+	<div class="container">
+		<header class="header">
+			<nav class="navbar">
+				<div class="logo">
+					<img src="{{ url_for('static', filename='logo.png') }}" alt="Website Logo">
+				</div>
+			</nav>
+		</header>
+
+		<main class="main-content">
+			<section class="registration-success">
+				<h1>Registration Successfully</h1>
+				<p>Hello, <strong>{{ email }}</strong>!</p>
+				<p>You have successfully registered. Please check your email to confirm your account.</p>
+			</section>
+		</main>
+
+		<footer class="footer">
+			<p>&copy; 2023 Announcements Website. All rights reserved.</p>
+		</footer>
+	</div>
+</body>
+</html>

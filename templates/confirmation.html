@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Email Confirmation</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='confirmation.css') }}">
+</head>
+<body>
+	<div class="container">
+		<header class="header">
+			<nav class="navbar">
+				<div class="logo">
+					<img src="{{ url_for('static', filename='logo.png') }}" alt="Website Logo">
+				</div>
+			</nav>
+		</header>
+
+		<main class="main-content">
+			<section class="confirmation">
+				<h1>Email Confirmation</h1>
+				<p>Hello, <strong>{{ user.name }}</strong>!</p>
+				<p>Your email has been confirmed successfully.</p>
+				<a href="{{ url_for('login') }}" class="login-link">Login</a>
+			</section>
+		</main>
+
+		<footer class="footer">
+			<p>&copy; 2023 Announcements Website. All rights reserved.</p>
+		</footer>
+	</div>
+</body>
+</html>

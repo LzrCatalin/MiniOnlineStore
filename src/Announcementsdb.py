@@ -297,3 +297,47 @@ class AnnouncementDataBase:
 
 		except sqlite3.Error as error:
 			print("Failed to retrieve from announcements table")
+
+	#
+	#	Function for finding category
+	#
+	def category_exists(self, category):
+		try:
+			with self.connect() as connect:
+				cursor = connect.cursor()
+				cursor.execute("SELECT COUNT(*) FROM announcements WHERE category = ?", (category,))
+				count = cursor.fetchone()[0]
+				if count > 0:
+					print(f"Category {category} found!")
+					return True  
+				else:
+					print(f"Category {category} not found!")
+					return False  
+
+		except sqlite3.Error as error:
+			print("Failed to retrieve from Announcements table", error)
+
+	
+	#
+	#	Retrieveing announcements using category 
+	#
+	def retrieveAnnouncementsFromAnnTableByCategory(self, category):
+		try:
+			with self.connect() as connect:
+				cursor = connect.cursor()
+				if self.category_exists(category):
+					cursor.execute("SELECT * FROM announcements WHERE category = ?", (category,))
+					existing_announcements = cursor.fetchall()
+					print(f"Succesfully returning announcements for category: {category}")
+					return existing_announcements
+				
+		except sqlite3.Error as error:
+			print("Failed to retrieve from announcements table")
+				
+				
+if __name__ == '__main__':
+
+	# Run my function: category_exists
+	announcement_db = AnnouncementDataBase("src/data_bases/announcements_database.db")
+	announcement_db.category_exists("imobiliare")
+	print(announcement_db.retrieveAnnouncementsFromAnnTableByCategory("imobiliare")[3][3])
