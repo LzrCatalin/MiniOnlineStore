@@ -13,7 +13,9 @@
 	<nav class="main-nav">
 		<!--Nav Bar-->
 		<div class="logo_website">
-			<img src="{{ url_for('static', filename='link') }}" alt="Logo">
+			<a href="{{ url_for('index') }}">
+				<img src="{{ url_for('static', filename='link') }}" alt="Logo">
+			</a>
 		</div>
 		<div class="user_actions">
 			{% if current_user.is_authenticated %}

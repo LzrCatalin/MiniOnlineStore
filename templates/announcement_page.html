@@ -8,6 +8,43 @@
 	<!-- Add your CSS stylesheets or links here -->
 </head>
 
+<nav class="main-nav">
+	<!--Nav Bar-->
+	<div class="logo_website">
+		<a href="{{ url_for('index') }}">
+			<img src="{{ url_for('static', filename='link') }}" alt="Logo">
+		</a>
+	</div>
+	<div class="user_actions">
+		{% if current_user.is_authenticated %}
+		<div class="user-profile">
+			<a href="{{ url_for('myprofile') }}" class="profile-link">
+				<p>Hi, <span id="username">{{ user.name }}</span></p>
+				{% if img_str %}
+					<img src="data:image/jpeg;base64,{{ img_str }}" alt="User Profile">
+				{% endif %}
+			</a>
+		</div>
+		<a href="{{ url_for('logout') }}">
+			<img src="{{ url_for('static', filename='icons/logout.png') }}" alt="Logout">
+		{% else %}
+		<a href="{{ url_for('login') }}">
+			<img src="{{ url_for('static', filename='icons/login.png') }}" alt="Login">
+		</a>
+		<a href="{{ url_for('register') }}">
+			<img src="{{ url_for('static', filename='icons/register.png') }}" alt="Register">
+		</a>
+		{% endif %}
+	</a>
+	<a href="{{ url_for('add_announcement') }}">
+		<img src="{{ url_for('static', filename='icons/add_announcement.png') }}" alt="Add Announcement">
+	</a>
+	</div>
+	<!--End Nav Bar-->
+</nav>
+
+<div class="separator"></div>
+
 <div class="separator"></div>
 
 <div class="search-container">
