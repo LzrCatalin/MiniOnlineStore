@@ -1,78 +1,78 @@
 /* General styles */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #f9f9f9; /* OLX background color */
+	font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background-color: #f9f9f9; /* OLX background color */
 }
 
 .logo_website img {
-    width: 100px;
-    height: auto;
+	width: 100px;
+	height: auto;
 }
 
 /* Main Nav Bar */
 .main-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #002f34; /* OLX top bar color */
-    padding: 15px 20px; /* Increased padding top and bottom */
-    width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: #002f34; /* OLX top bar color */
+	padding: 15px 20px; /* Increased padding top and bottom */
+	width: 100%;
 }
 
 .user_actions {
-    display: flex;
-    gap: 20px; /* Increased gap between icons */
-    align-items: center;
+	display: flex;
+	gap: 20px; /* Increased gap between icons */
+	align-items: center;
 }
 
 .user_actions a,
 .user_actions img {
-    width: 40px; /* Adjusted icon size */
-    height: 40px; /* Adjusted icon size */
-    cursor: pointer;
-    border-radius: 50%; /* Rounded profile picture */
-    margin-right: 10px; /* Add spacing between icons */
+	width: 40px; /* Adjusted icon size */
+	height: 40px; /* Adjusted icon size */
+	cursor: pointer;
+	border-radius: 50%; /* Rounded profile picture */
+	margin-right: 10px; /* Add spacing between icons */
 }
 
 .user_actions button {
-    padding: 8px 16px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    background-color: #ffffff; /* OLX button color */
-    color: rgb(0, 0, 0); /* Button text color */
+	padding: 8px 16px;
+	border-radius: 5px;
+	border: none;
+	cursor: pointer;
+	background-color: #ffffff; /* OLX button color */
+	color: rgb(0, 0, 0); /* Button text color */
 }
 
 .user_actions img {
-    width: 40px; /* Adjust icon size */
-    height: 40px; /* Adjust icon size */
-    cursor: pointer;
+	width: 40px; /* Adjust icon size */
+	height: 40px; /* Adjust icon size */
+	cursor: pointer;
 }
 
 .user_actions button:hover {
-    background-color: #4f4dbb; /* Hover state color */
+	background-color: #4f4dbb; /* Hover state color */
 }
 
 .user-profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
 }
 
 .profile-link {
-    text-decoration: none;
-    color: white; /* Change text color */
-    font-size: 18px; /* Increase font size */
+	text-decoration: none;
+	color: white; /* Change text color */
+	font-size: 18px; /* Increase font size */
 }
 
 .profile-link span {
-    font-weight: bold;
-    margin-right: 5px;
+	font-weight: bold;
+	margin-right: 5px;
 }
 
 /* Search container */

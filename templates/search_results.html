@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Search Results</title>
+	<!-- Add your stylesheets and scripts here -->
+</head>
+
+<body>
+	<h1>Search Results</h1>
+
+	<div class="search-container">
+		<form action="{{ url_for('search_results') }}" method="GET">
+			<div class="search-bar">
+				<input type="text" name="query" placeholder="Search..." value="{{ query }}">
+				<select name="category">
+					<option value="all" {% if category == 'all' %}selected{% endif %}>All Categories</option>
+					<option value="imobiliare" {% if category == 'imobiliare' %}selected{% endif %}>Imobiliare</option>
+					<option value="automobile" {% if category == 'automobile' %}selected{% endif %}>Automobile</option>
+					<option value="servicii" {% if category == 'servicii' %}selected{% endif %}>Servicii</option>
+					<!-- Add more options as needed -->
+				</select>
+				<button type="submit" class="search-btn">!<i class="fa fa-search"></i></button>
+			</div>
+		</form>
+	</div>
+
+	<div class="separator"></div>
+
+	<h2>Search Results for '{{ query }}' in '{{ category.capitalize() }}' Category</h2>
+
+	<div class="announcement-list">
+		{% if announcements %}
+			{% for announcement in announcements %}
+				{% if announcement.publisher_name %}
+					<a href="{{ url_for('announcement_page', announcement_id = announcement.id) }}" class="announcement-item">						<div class="announcement-content">
+						<div class="announcement-image">
+							<img src="data:image/jpeg;base64,{{ announcement.main_photo }}" alt="Announcement Image">
+						</div>
+						<div class="details">
+							<h2>{{ announcement.name }}</h2>
+							<p>{{ announcement.description }}</p>
+							<span>Price: {{ announcement.price }}</span>
+							<p>User: {{ announcement.publisher_name }}</p>
+						</div>
+						</div>
+					</a>
+				{% endif %}
+			{% endfor %}
+		{% else %}
+            <p>No results found.</p>
+        {% endif %}
+	</div>
+
+	<!-- Add other content or scripts as needed -->
+</body>
+
+</html>

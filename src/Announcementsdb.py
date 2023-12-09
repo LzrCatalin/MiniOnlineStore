@@ -333,11 +333,35 @@ class AnnouncementDataBase:
 				
 		except sqlite3.Error as error:
 			print("Failed to retrieve from announcements table")
+	
+	#
+	#	Searching announcements inside database
+	#
+	def search_announcements(self, category, name):
+		try:
+			with self.connect() as connect:
+				cursor = connect.cursor()
+				if category == 'all':
+					cursor.execute("SELECT * FROM announcements WHERE name LIKE ?", ('%' + name + '%',))
+					existing_announcements = cursor.fetchall()
+					print(f"Found announcements for {name} in all categories")
 				
+				elif self.category_exists(category):
+					cursor.execute("SELECT * FROM announcements WHERE category = ? AND name LIKE ?", (category, '%' + name + '%',))
+					existing_announcements = cursor.fetchall()
+					print(f"Found announcements for {category} and {name}")
+
+				return existing_announcements
+			
+		except sqlite3.Error as error:
+			print("Failed to retrieve from announcements table")
 				
 if __name__ == '__main__':
 
 	# Run my function: category_exists
 	announcement_db = AnnouncementDataBase("src/data_bases/announcements_database.db")
-	announcement_db.category_exists("imobiliare")
-	print(announcement_db.retrieveAnnouncementsFromAnnTableByCategory("imobiliare")[3][3])
+	#announcement_db.category_exists("imobiliare")
+	#print(announcement_db.retrieveAnnouncementsFromAnnTableByCategory("imobiliare")[3][3])
+	print(announcement_db.retrieveAnnouncementsFromAnnTableById(8)[1])
+	existing_ads = announcement_db.search_announcements('imobiliare', 'mercedes')
+	print(existing_ads[0][3])	

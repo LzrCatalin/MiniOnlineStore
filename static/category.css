@@ -1,0 +1,196 @@
+/* Reset default margin and padding */
+body,
+h1,
+h2,
+p {
+	margin: 0;
+	padding: 0;
+}
+
+/* General styles */
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f9f9f9;
+	margin: 0;
+}
+
+/* Navigation bar */
+.main-nav {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: #002f34;
+	padding: 10px 20px;
+}
+
+.logo_website img {
+	width: 80px;
+	height: auto;
+}
+
+.user_actions a,
+.user_actions img {
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+	border-radius: 50%;
+	margin-right: 8px;
+}
+
+.user_actions button {
+	padding: 6px 12px;
+	border-radius: 4px;
+	border: none;
+	cursor: pointer;
+	background-color: #fff;
+	color: #000;
+}
+
+.user-profile {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.profile-link {
+	text-decoration: none;
+	color: white;
+	font-size: 14px;
+}
+
+.profile-link span {
+	font-weight: bold;
+	margin-right: 4px;
+}
+
+/* Search container */
+.search-container {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 20px;
+}
+
+/* Search bar styles */
+.search-bar {
+	display: flex;
+	align-items: center;
+	background-color: #fff;
+	border-radius: 25px;
+	padding: 8px 15px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar input[type="text"] {
+	flex: 1;
+	border: none;
+	padding: 8px;
+	border-radius: 25px;
+	outline: none;
+}
+
+.search-bar .search-btn {
+	background-color: #4c2c9d; /* OLX search button color */
+	color: #fff;
+	border: none;
+	border-radius: 25px;
+	padding: 12px 24px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.search-bar .search-btn:hover {
+	background-color: #4f4dbb; /* Hover state color */
+}
+
+/* Search container */
+.search-container {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 20px;
+	margin-bottom: 20px; /* Add margin at the bottom of the search container */
+  }
+  
+/* Center "Announcements for category" */
+.announcement-header {
+	text-align: center;
+	margin-bottom: 40px; /* Increase margin between header and announcements */
+	font-size: 20px;
+  }
+  
+/* Announcements section */
+.announcements {
+	padding: 16px;
+	margin-bottom: 30px; /* Add margin at the bottom of the announcements */
+	max-height: 500px; /* Set a fixed maximum height for the announcements container */
+	overflow-y: auto; /* Enable vertical scrolling */
+}
+
+/* Reduce size of announcement frames */
+.announcement-item {
+	display: flex;
+	background-color: #fff;
+	border: 1px solid #e0e0e0;
+	border-radius: 4px;
+	margin-bottom: 30px;
+	padding: 10px;
+	max-width: 600px; /* Set maximum width for the frames */
+	margin-left: auto; /* Center frames */
+	margin-right: auto;
+}
+
+.announcement-item .announcement-image {
+	flex: 0 0 30%; /* Adjust the width of the image column */
+	margin-right: 10px;
+}
+
+.announcement-item .announcement-image img {
+	width: 150px; /* Adjust image size */
+	height: auto;
+	border-radius: 4px;
+}
+
+.announcement-item .announcement-details {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+
+}
+
+.announcement-item h2 {
+	margin-top: 0;
+	font-size: 18px;
+	color: #333;
+}
+
+.announcement-item p {
+	margin: 5px 0;
+	font-size: 14px;
+	color: #666;
+}
+
+.announcement-item span {
+	font-weight: bold;
+	font-size: 16px;
+	color: #4c2c9d;
+}
+
+h1 {	
+	text-align: center;
+	font-size: 30px;
+	color: #333;
+	font-size: 20px;
+	color: #333;
+}
+
+.separator {
+	display: flex;
+	align-items: center;
+	text-align: center;
+	color: #333;
+	margin: 20px 0;
+}

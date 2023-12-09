@@ -359,6 +359,7 @@ def add_announcement():
 @app.route('/category', methods=['GET'])
 def category():
 	global announcement_db
+	global user_db
 
 	category = request.args.get('category')
 	user = None
@@ -394,12 +395,24 @@ def category():
 		
 		for announcement_data in announcements:
 			announcement = {
+				'id': announcement_data[0],
+				'id_user': announcement_data[1],
 				'name': announcement_data[3],
 				'description': announcement_data[4],
 				'price': announcement_data[5],
 				'main_photo': announcement_data[6] if announcement_data[6] else None
 			}
 			
+			ad_publisher = user_db.retrieveUserFromUsersTableById(announcement['id_user'])
+			print(ad_publisher)
+
+			# Ensure ad_publisher exists before accessing its data
+			if ad_publisher and len(ad_publisher) > 0:
+				publisher_name = ad_publisher[1]  # Assuming name is at index 1, modify if needed
+
+				# Add publisher name to the announcement
+				announcement['publisher_name'] = publisher_name
+
 			if announcement['main_photo']:
 				image = Image.open(io.BytesIO(announcement['main_photo']))
 				if image.mode != 'RGB':
@@ -408,21 +421,165 @@ def category():
 				buffered = io.BytesIO()
 				image.save(buffered, format="JPEG") 
 				announcement['main_photo'] = base64.b64encode(buffered.getvalue()).decode()
-			
+
 			announcements_list.append(announcement)
-			print(announcement)
 
-	return render_template('category.html', user=user, img_str=img_str, announcements=announcements_list, category=category)
-
+	return render_template('category.html', user=user, img_str=img_str, announcements=announcements_list, category=category, ad_publisher = ad_publisher)
 #
 #	Announcement page
 #
-app.route('/announcement_page/<int:id>', methods=['GET', 'POST'])
-def display_announcement():
+@app.route('/announcement_page', methods=['GET'])
+def announcement_page():
+	global user_db
 	global announcement_db
 
-	# TODO : To the webpage like as myprofile for each announcement
+	ad_id = request.args.get('announcement_id')
 
+	user = None
+	img_str = None
+
+	if current_user.is_authenticated:
+		username = current_user.id
+		user_data = user_db.retrieveUserFromUsersTableByName(username)
+
+		if user_data and len(user_data) > 0:
+			user_info = user_data[0]
+			user = {
+				'name': user_info[1],
+				'photo': user_info[4]
+			}
+
+			# Convert the image to base64 for displaying it in the HTML
+			if user['photo']:
+				image = Image.open(io.BytesIO(user['photo']))
+				if image.mode != 'RGB':
+					image = image.convert('RGB')
+
+				buffered = io.BytesIO()
+				image.save(buffered, format="JPEG") 
+				img_str = base64.b64encode(buffered.getvalue()).decode()
+
+	if ad_id:
+		print(f"Chosen ad {ad_id}")
+
+		announcement_data = announcement_db.retrieveAnnouncementsFromAnnTableById(ad_id)
+		announcement = {
+			'id': announcement_data[0],
+			'id_user': announcement_data[1],
+			'name': announcement_data[3],
+			'description': announcement_data[4],
+			'price': announcement_data[5],
+			'main_photo': announcement_data[6] if announcement_data[6] else None,
+			'secondary_photo1': announcement_data[7] if announcement_data[7] else None,
+			'secondary_photo2': announcement_data[8] if announcement_data[8] else None,
+			'secondary_photo3': announcement_data[9] if announcement_data[9] else None
+		}
+
+		print(announcement_data[3], announcement_data[4])
+
+		ad_publisher = user_db.retrieveUserFromUsersTableById(announcement['id_user'])
+		print(ad_publisher[1])
+
+		# Ensure ad_publisher exists before accessing its data
+		if ad_publisher and len(ad_publisher) > 0:
+			publisher_name = ad_publisher[1]  # Assuming name is at index 1, modify if needed
+
+			# Add publisher name to the announcement
+			announcement['publisher_name'] = publisher_name
+
+		#
+		#	Convert the images to base64 for displaying it in the HTML
+		#
+		if announcement['main_photo']:
+			image = Image.open(io.BytesIO(announcement['main_photo']))
+			if image.mode != 'RGB':
+				image = image.convert('RGB')
+
+			buffered = io.BytesIO()
+			image.save(buffered, format="JPEG") 
+			announcement['main_photo'] = base64.b64encode(buffered.getvalue()).decode()
+		
+		if announcement['secondary_photo1']:
+			image = Image.open(io.BytesIO(announcement['secondary_photo1']))
+			if image.mode != 'RGB':
+				image = image.convert('RGB')
+
+			buffered = io.BytesIO()
+			image.save(buffered, format="JPEG") 
+			announcement['secondary_photo1'] = base64.b64encode(buffered.getvalue()).decode()
+
+		if announcement['secondary_photo2']:
+			image = Image.open(io.BytesIO(announcement['secondary_photo2']))
+			if image.mode != 'RGB':
+				image = image.convert('RGB')
+
+			buffered = io.BytesIO()
+			image.save(buffered, format="JPEG") 
+			announcement['secondary_photo2'] = base64.b64encode(buffered.getvalue()).decode()
+
+		if announcement['secondary_photo3']:
+			image = Image.open(io.BytesIO(announcement['secondary_photo3']))
+			if image.mode != 'RGB':
+				image = image.convert('RGB')
+
+			buffered = io.BytesIO()
+			image.save(buffered, format="JPEG") 
+			announcement['secondary_photo3'] = base64.b64encode(buffered.getvalue()).decode()
+
+		return render_template('announcement_page.html', user=user, img_str=img_str, announcement=announcement, ad_publisher=ad_publisher)
+	else:
+		return f"Add {ad_id} not found"
+
+#
+#	Search function
+#
+from flask import request
+
+# Assuming you've imported other necessary modules like user_db, announcement_db, etc.
+
+@app.route('/search_results', methods=['GET'])
+def search_results():
+    global announcement_db
+    global user_db  # Assuming user_db is a global variable
+
+    query = request.args.get('query')
+    category = request.args.get('category')
+    
+    announcements_results = announcement_db.search_announcements(category, query) 
+    announcements_list = []
+
+    for announcement_data in announcements_results:
+        announcement = {
+            'id': announcement_data[0],
+            'id_user': announcement_data[1],
+            'name': announcement_data[3],
+            'description': announcement_data[4],
+            'price': announcement_data[5],
+            'main_photo': announcement_data[6] if announcement_data[6] else None
+        }
+        
+        ad_publisher = user_db.retrieveUserFromUsersTableById(announcement['id_user'])
+
+        # Ensure ad_publisher exists before accessing its data
+        if ad_publisher and len(ad_publisher) > 0:
+            publisher_name = ad_publisher[1] 
+
+            # Add publisher name to the announcement
+            announcement['publisher_name'] = publisher_name
+
+        if announcement['main_photo']:
+            image = Image.open(io.BytesIO(announcement['main_photo']))
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
+
+            buffered = io.BytesIO()
+            image.save(buffered, format="JPEG") 
+            announcement['main_photo'] = base64.b64encode(buffered.getvalue()).decode()
+
+        announcements_list.append(announcement)
+
+    return render_template('search_results.html', announcements=announcements_list, query=query, category=category)
+	
 ###############################################################################
 
 def db_init():
@@ -433,7 +590,7 @@ def db_init():
 	user_db = UserDatabase(UserDatabase_path)
 	if user_db is None:
 		exit(1)
-
+ 
 	# announcement data base
 	announcement_db = AnnouncementDataBase(AnnouncementsDatabase_path)
 	if announcement_db is None:
@@ -517,6 +674,8 @@ if __name__ == '__main__':
 	#
 
 	#
-	# TODO : CREATE WEBPAGE FOR REDIRECTING USER AFTER REGISTER WITH MESSAGE TO CONFIRM 
-	#	ACCOUNT FROM MAIL
+	# ADDED : DISPLAYING FOR EACH AD, THE USER THAT POSTED IT
+	#		: NEW PAGE FOR REDIRECTING USER AFTER REGISTER
+	#		: SEARCH BAR IMPLEMENTATION
+	#		: ANNOUNCEMENT PAGE
 	#

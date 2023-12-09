@@ -205,7 +205,7 @@ class UserDatabase:
 		try:
 			with self.connect() as connect:
 				cursor = connect.cursor()
-				if self.user_exists_with_password(cursor, name, password):
+				if self.user_exists_with_password(name, password):
 					cursor.execute("SELECT * FROM users WHERE name = ? AND password = ?", (name, password))
 					users = cursor.fetchall()
 					print("Users retrieved successfully from users_database")
@@ -234,6 +234,23 @@ class UserDatabase:
 		except sqlite3.Error as error:
 			print("Failed to retrieve from Users table", error)
 
+	#
+	#	Function for retrieveing user using id
+	#
+	def retrieveUserFromUsersTableById(self, id):
+		try:
+			with self.connect() as connect:
+				cursor = connect.cursor()
+				if self.user_exists_by_id(id):
+					cursor.execute("SELECT * FROM users WHERE id = ?", (id,))
+					user = cursor.fetchone()
+					print("User retrieved succesfully from users_database")
+					return user
+				else:
+					print(f"User with id {id} is it not in database")
+
+		except sqlite3.Error as error:
+			print("Failed to retrieved from Users table", error)
 	#
 	#	Function for retrieving id of user
 	#
@@ -271,3 +288,12 @@ class UserDatabase:
 		
 		except sqlite3.Error as error:
 			print("Failed to retrieve from Users table", error)
+
+
+if __name__ == '__main__':
+
+	user_db = UserDatabase("src/data_bases/users_database.db")
+	print("Incep printurile")
+	user = user_db.retrieveUserFromUsersTableById(5)
+	print(user[1])
+	print(user_db.user_exists_by_id(100))

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Announcement Details</title>
+	<!-- Add your CSS stylesheets or links here -->
+</head>
+
+<div class="separator"></div>
+
+<div class="search-container">
+	<form action="{{ url_for('search_results') }}" method="GET">
+		<div class="search-bar">
+			<input type="text" name="query" placeholder="Search...">
+			<select name="category">
+				<option value="all">All Categories</option>
+				<option value="imobiliare">Imobiliare</option>
+				<option value="automobile">Automobile</option>
+				<option value="servicii">Servicii</option>
+				<!-- Add more options as needed -->
+			</select>
+			<button type="submit" class="search-btn">!<i class="fa fa-search"></i></button>
+		</div>
+	</form>
+</div>
+
+<div class="separator"></div>
+
+<body>
+	<header>
+		<h1>Announcement Details</h1>
+		<!-- Add navigation or other header content here if needed -->
+	</header>
+
+	<main>
+		<div class="announcement-details">
+			<div class="announcement-image">
+				<img src="data:image/jpeg;base64,{{ announcement.main_photo }}" alt="Main Image">
+				<img src="data:image/jpeg;base64,{{ announcement.secondary_photo1 }}" alt="Main Image">
+				<img src="data:image/jpeg;base64,{{ announcement.secondary_photo2 }}" alt="Main Image">
+				<img src="data:image/jpeg;base64,{{ announcement.secondary_photo3 }}" alt="Main Image">
+			</div>
+			<div class="announcement-info">
+				<h2>Announcement Title: {{ announcement.name }}</h2>
+				<p>Description: {{ announcement.description }}</p>
+				<p>Price: {{ announcement.price }}$</p>
+				<p>User: {{ announcement.publisher_name }}</p>
+				<!-- Display other details about the announcement -->
+			</div>
+		</div>
+		<!-- Add additional content or sections as needed -->
+	</main>
+
+	<footer>
+		<!-- Footer content -->
+	</footer>
+</body>
+
+</html>

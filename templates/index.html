@@ -47,11 +47,21 @@
 
 	<!-- Second Nav Bar with Search Bar -->
 	<div class="search-container">
-		<div class="search-bar">
-			<input type="text" placeholder="Search...">
-			<button class="search-btn">!<i class="fa fa-search"></i></button>
-		</div>
+		<form action="{{ url_for('search_results') }}" method="GET">
+			<div class="search-bar">
+				<input type="text" name="query" placeholder="Search...">
+				<select name="category">
+					<option value="all">All Categories</option>
+					<option value="imobiliare">Imobiliare</option>
+					<option value="automobile">Automobile</option>
+					<option value="servicii">Servicii</option>
+					<!-- Add more options as needed -->
+				</select>
+				<button type="submit" class="search-btn">!<i class="fa fa-search"></i></button>
+			</div>
+		</form>
 	</div>
+	
 
 	<div class="separator"></div>
 
