@@ -4,6 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='search_results.css') }}">
 	<title>Search Results</title>
 	<!-- Add your stylesheets and scripts here -->
 </head>
@@ -46,7 +47,7 @@
 	</nav>
 
 	<div class="separator"></div>
-	
+
 	<h1>Search Results</h1>
 
 	<div class="search-container">
@@ -81,7 +82,7 @@
 							<h2>{{ announcement.name }}</h2>
 							<p>{{ announcement.description }}</p>
 							<span>Price: {{ announcement.price }}</span>
-							<p>User: {{ announcement.publisher_name }}</p>
+							<p>Published by: {{ announcement.publisher_name }}</p>
 						</div>
 						</div>
 					</a>

@@ -18,17 +18,20 @@ sys.path.append("src")
 #
 from Usersdb import UserDatabase
 from Announcementsdb import AnnouncementDataBase
+from Commentsdb import CommentDatabase
 
 ###############################################################################
 
 UserDatabase_path = "src/data_bases/users_database.db"
 AnnouncementsDatabase_path = "src/data_bases/announcements_database.db"
+CommentDatabase_path = "src/data_bases/comments_database.db"
 
 ###############################################################################
 
 mail = None
 user_db = None
 announcement_db = None
+comments_db = None
 
 
 ###############################################################################
@@ -425,16 +428,18 @@ def category():
 			announcements_list.append(announcement)
 
 	return render_template('category.html', user=user, img_str=img_str, announcements=announcements_list, category=category, ad_publisher = ad_publisher)
+
 #
 #	Announcement page
 #
-@app.route('/announcement_page', methods=['GET'])
+@app.route('/announcement_page', methods=['GET', 'POST'])
 def announcement_page():
 	global user_db
 	global announcement_db
+	global comments_db
 
 	ad_id = request.args.get('announcement_id')
-
+	
 	user = None
 	img_str = None
 
@@ -446,6 +451,7 @@ def announcement_page():
 			user_info = user_data[0]
 			user = {
 				'name': user_info[1],
+				'email': user_info[2],
 				'photo': user_info[4]
 			}
 
@@ -459,8 +465,13 @@ def announcement_page():
 				image.save(buffered, format="JPEG") 
 				img_str = base64.b64encode(buffered.getvalue()).decode()
 
+		email = user_info[2]
+		print(f"Connected user: {email}")
+	else:
+		print(f"Connected user: {user}")
+
 	if ad_id:
-		print(f"Chosen ad {ad_id}")
+		print(f"Chosen ad: {ad_id}")
 
 		announcement_data = announcement_db.retrieveAnnouncementsFromAnnTableById(ad_id)
 		announcement = {
@@ -475,10 +486,17 @@ def announcement_page():
 			'secondary_photo3': announcement_data[9] if announcement_data[9] else None
 		}
 
-		print(announcement_data[3], announcement_data[4])
+		# Need this
+		print(f"Ad category: {announcement_data[2]}")	
+		# Need this
+		print(f"Ad name: {announcement_data[3]}")	
+		print(f"Ad description: {announcement_data[4]}")
 
 		ad_publisher = user_db.retrieveUserFromUsersTableById(announcement['id_user'])
-		print(ad_publisher[1])
+		# Need this
+		print(f"Publisher name: {ad_publisher[1]}")
+		# Need this
+		print(f"Publisher email: {ad_publisher[2]}")
 
 		# Ensure ad_publisher exists before accessing its data
 		if ad_publisher and len(ad_publisher) > 0:
@@ -487,9 +505,7 @@ def announcement_page():
 			# Add publisher name to the announcement
 			announcement['publisher_name'] = publisher_name
 
-		#
 		#	Convert the images to base64 for displaying it in the HTML
-		#
 		if announcement['main_photo']:
 			image = Image.open(io.BytesIO(announcement['main_photo']))
 			if image.mode != 'RGB':
@@ -525,10 +541,68 @@ def announcement_page():
 			buffered = io.BytesIO()
 			image.save(buffered, format="JPEG") 
 			announcement['secondary_photo3'] = base64.b64encode(buffered.getvalue()).decode()
+		
+		if request.method == 'POST':
+			comment_text = request.form.get('comment')
 
-		return render_template('announcement_page.html', user=user, img_str=img_str, announcement=announcement, ad_publisher=ad_publisher)
+			if comment_text:
+				comments_db.insertCommentIntoCommentsTable(user_info[0], announcement_data[0], comment_text)
+				send_new_comment_on_announcement(ad_publisher[2], announcement_data[3], announcement_data[2], comment_text)
+
+		print(f"Id ad: {announcement_data[0]}")
+		comments = []
+		comment_publisher = None 
+
+		comments_data = comments_db.retrieveCommentsFromTableByIdAd(announcement_data[0])
+		if comments_data:
+			for comment_data in comments_data:
+				comment_publisher = user_db.retrieveUserFromUsersTableById(comment_data[1])
+				replies = []
+
+				if comment_publisher:
+					replies_data = comments_db.retrieveRepliesForComment(comment_data[0])
+
+					if replies_data:
+						for reply_data in replies_data:
+							reply_publisher = user_db.retrieveUserFromUsersTableById(reply_data[1])
+							if reply_publisher:
+								replies.append({
+									'name': reply_publisher[1],
+									'id_user': reply_data[1],
+									'text': reply_data[3]
+								})
+
+					comments.append({
+						'name': comment_publisher[1],
+						'id_user': comment_data[1],
+						'text': comment_data[3],
+						'replies': replies
+					})
+					print(f"Printez numele userului ce a pus comentariu: {comment_publisher[1]}")
+					print(f"Comentariul postat: {comment_data[3]}")
+
+		return render_template('announcement_page.html', user=user, img_str=img_str, announcement=announcement, ad_publisher=ad_publisher, comments=comments, comment_publisher=comment_publisher)
 	else:
-		return f"Add {ad_id} not found"
+		return f"Ad {ad_id} not found"
+
+#
+#	Reply for comments
+#
+@app.route('/reply_to_comment', methods=['POST'])
+def reply_to_comment():
+
+	user_info = user_db.retrieveUserFromUsersTableByName(current_user.id)
+	parent_comment_id = request.form.get('parent_comment_id')
+	comment_text = request.form.get('comment')
+	announcement_id = request.args.get('announcement_id')  # Get announcement_id from form data
+
+	if user_info and parent_comment_id and comment_text and announcement_id:
+		comments_db.addReplyToComment(user_info[0], announcement_id, comment_text, parent_comment_id)
+		comment_publisher = user_db.retrieveUserFromUsersTableById(parent_comment_id)
+		if comment_publisher:
+			send_new_reply_on_comment(comment_publisher[2], announcement_id, comment_publisher[1], comment_text)
+
+	return redirect(url_for('announcement_page', announcement_id=announcement_id))
 
 #
 #	Search function
@@ -536,7 +610,10 @@ def announcement_page():
 @app.route('/search_results', methods=['GET'])
 def search_results():
 	global announcement_db
-	global user_db  # Assuming user_db is a global variable
+	global user_db 
+	
+	user = None
+	img_str = None
 
 	query = request.args.get('query')
 	category = request.args.get('category')
@@ -562,46 +639,59 @@ def search_results():
 				image.save(buffered, format="JPEG") 
 				img_str = base64.b64encode(buffered.getvalue()).decode()
 				
-		announcements_results = announcement_db.search_announcements(category, query) 
-		announcements_list = []
+	announcements_results = announcement_db.search_announcements(category, query) 
+	announcements_list = []
 
-		for announcement_data in announcements_results:
-			announcement = {
-				'id': announcement_data[0],
-				'id_user': announcement_data[1],
-				'name': announcement_data[3],
-				'description': announcement_data[4],
-				'price': announcement_data[5],
-				'main_photo': announcement_data[6] if announcement_data[6] else None
-			}
-			
-			ad_publisher = user_db.retrieveUserFromUsersTableById(announcement['id_user'])
+	for announcement_data in announcements_results:
+		announcement = {
+			'id': announcement_data[0],
+			'id_user': announcement_data[1],
+			'name': announcement_data[3],
+			'description': announcement_data[4],
+			'price': announcement_data[5],
+			'main_photo': announcement_data[6] if announcement_data[6] else None
+		}
+		
+		ad_publisher = user_db.retrieveUserFromUsersTableById(announcement['id_user'])
 
-			# Ensure ad_publisher exists before accessing its data
-			if ad_publisher and len(ad_publisher) > 0:
-				publisher_name = ad_publisher[1] 
+		# Ensure ad_publisher exists before accessing its data
+		if ad_publisher and len(ad_publisher) > 0:
+			publisher_name = ad_publisher[1] 
 
-				# Add publisher name to the announcement
-				announcement['publisher_name'] = publisher_name
+			# Add publisher name to the announcement
+			announcement['publisher_name'] = publisher_name
 
-			if announcement['main_photo']:
-				image = Image.open(io.BytesIO(announcement['main_photo']))
-				if image.mode != 'RGB':
-					image = image.convert('RGB')
+		if announcement['main_photo']:
+			image = Image.open(io.BytesIO(announcement['main_photo']))
+			if image.mode != 'RGB':
+				image = image.convert('RGB')
 
-				buffered = io.BytesIO()
-				image.save(buffered, format="JPEG") 
-				announcement['main_photo'] = base64.b64encode(buffered.getvalue()).decode()
+			buffered = io.BytesIO()
+			image.save(buffered, format="JPEG") 
+			announcement['main_photo'] = base64.b64encode(buffered.getvalue()).decode()
 
-			announcements_list.append(announcement)
+		announcements_list.append(announcement)
 
-	return render_template('search_results.html', user=user, announcements=announcements_list, query=query, category=category)
+	return render_template('search_results.html', user=user, img_str=img_str, announcements=announcements_list, query=query, category=category)
 	
+
+@app.route('/test_email')
+def test_email():
+	email = "danaricuradu05@gmail.com"
+	name = "Audi RS3"
+	category = "automobile"
+	comment_text = "Hi, is it still valid?"
+
+	send_new_comment_on_announcement(email, name, category, comment_text)
+	return "Test email sent successfully!"
+
+
 ###############################################################################
 
 def db_init():
 	global user_db
 	global announcement_db
+	global comments_db
 
 	# users data base
 	user_db = UserDatabase(UserDatabase_path)
@@ -611,6 +701,11 @@ def db_init():
 	# announcement data base
 	announcement_db = AnnouncementDataBase(AnnouncementsDatabase_path)
 	if announcement_db is None:
+		exit(1)
+
+	# comments data base
+	comments_db = CommentDatabase(CommentDatabase_path)
+	if comments_db is None:
 		exit(1)
 
 
@@ -635,7 +730,7 @@ def demo_db_add():
 														  "src/users_photos/images.png",
 														  "src/users_photos/images.png",
 														  "src/users_photos/images.png")
-
+	
 #
 #	Mail message for register
 #
@@ -671,6 +766,36 @@ def send_announcement_added_email(email, category, name, description, price):
 		print("Announcement placement email sent successfully!")
 	except Exception as e:
 		print(f"Failed to send announcement placement email: {str(e)}")
+
+#
+#	Mail messages for new notifications
+#
+def send_new_comment_on_announcement(email, name, category, comment_text):
+	subject = "New notification"
+	body = f"Dear User,\n\nYour announcement for '{name}' in the category '{category}' received a new comment.\n\nComment: {comment_text}"
+	sender = "tuyasmartbot@gmail.com"
+
+	try:
+		msg = Message(subject=subject, body=body, sender=sender, recipients=[email])
+		mail.send(msg)
+		print("Notification mail sent successfully!")
+	except Exception as e:
+		print(f"Failed to send notification email: {str(e)}")
+
+#
+#	Mail message for reply
+#
+def send_new_reply_on_comment(email, name, category, reply_text):
+	subject = "New notification"
+	body = f"Dear User,\n\nYour received a respons on your comment for announcement {name} from {category}.\n\nContent: {reply_text}"
+	sender = "tuyasmartbot@gmail.com"
+	try:
+		msg = Message(subject=subject, body=body, sender=sender, recipients=[email])
+		mail.send(msg)
+		print("Notification mail sent successfully!")
+	except Exception as e:
+		print(f"Failed to send notification email: {str(e)}")
+
 
 
 if __name__ == '__main__':

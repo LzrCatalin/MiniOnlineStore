@@ -1,127 +1,129 @@
 /* myprofile.css */
 
-/* Overall body style */
+/* Global Reset */
+/* ... (same as before) */
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #f5f5f5;
-}
-
-/* Page title style */
-h1 {
-    font-size: 32px;
+    background-color: #f9f9f9;
     color: #333;
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
-    margin-bottom: 10px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
 }
 
-/* Welcome message style */
-#welcome-message {
-    font-size: 18px;
-    color: #555;
+/* Navigation Bar Styles */
+.main-nav {
+    background-color: #002f34;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Adding shadow for depth */
+}
+
+.logo_website a img {
+    width: 100px;
+    height: auto;
+}
+
+.user_actions {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.user_actions a,
+.user_actions img,
+.user_actions button {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.user_actions button {
+    background-color: #ffffff;
+    color: #002f34;
+    border: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.user_actions img {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.user_actions button:hover {
+    background-color: #4f4dbb;
+    color: #ffffff;
+}
+
+/* Separator Styles */
+.separator {
+    border-bottom: 2px solid #fff;
+    margin: 20px 0;
+}
+
+/* Heading Styles */
+h1,
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #002f34;
+}
+
+/* Profile Section Styles */
+#profilePic {
+    text-align: center;
     margin-bottom: 20px;
 }
 
-/* Profile picture container */
-#profilePic {
-    margin-top: 20px;
-    text-align: center;
-}
-
-/* Profile picture style */
 #profileImage {
-    max-width: 200px;
-    max-height: 200px;
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+    height: auto;
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Adding shadow for depth */
 }
 
-/* Announcement history table style */
+.user-data {
+    margin: 20px;
+}
+
+.user-data h2 {
+    font-size: 24px;
+    color: #002f34;
+    margin-bottom: 15px;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    overflow: hidden;
-}
-
-/* Table header cell style */
-th {
-    background-color: #4CAF50;
-    color: white;
-    padding: 12px;
-    text-align: left;
-}
-
-/* Table body row style */
-tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-/* Table cell style */
-td {
-    padding: 10px;
-    text-align: left;
-}
-
-/* Hover effect on table rows */
-tbody tr:hover {
-    background-color: #ddd;
-}
-
-/* Optional: Link color */
-a {
-    color: #1e90ff;
-}
-
-/* Styles for Users Data Display */
-
-/* User data container */
-.user-data {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 15px;
     margin-bottom: 20px;
 }
 
-/* User data title */
-.user-data h2 {
-    font-size: 20px;
-    color: #333;
-    margin-bottom: 8px;
-}
-
-/* User data table style */
-.user-data table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-/* User data table header cell style */
-.user-data th {
-    background-color: #4CAF50;
-    color: white;
+table th,
+table td {
+    border: 1px solid #ccc;
     padding: 10px;
     text-align: left;
-    font-size: 14px;
 }
 
-/* User data table body row style */
-.user-data tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+    .main-nav {
+        padding: 10px;
+    }
 
-/* User data table cell style */
-.user-data td {
-    padding: 8px;
-    text-align: left;
-    font-size: 14px;
-}
+    .logo_website a img {
+        width: 80px;
+    }
 
-/* Optional: Link color for user data */
-.user-data a {
-    color: #1e90ff;
+    .user_actions a,
+    .user_actions img,
+    .user_actions button {
+        width: 30px;
+        height: 30px;
+    }
 }

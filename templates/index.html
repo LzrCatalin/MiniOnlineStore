@@ -14,7 +14,7 @@
 		<!--Nav Bar-->
 		<div class="logo_website">
 			<a href="{{ url_for('index') }}">
-				<img src="{{ url_for('static', filename='link') }}" alt="Logo">
+				<img src="{{ url_for('static', filename='icons/logo.jpg') }}" alt="Logo">
 			</a>
 		</div>
 		<div class="user_actions">
@@ -67,22 +67,33 @@
 
 	<div class="separator"></div>
 
-	<span class="category-title">Categorii principale</span>
+	<span class="category-title">Main categories</span>
 	<div class="categories">
 		<a href="{{ url_for('category', category='imobiliare') }}">			
 			<img src="{{ url_for('static', filename='categories_photos/imobiliare.png') }}" alt="Imobiliare Image">			
-			<span>Imobiliare</span>
+			<span>Real Estate</span>
 		</a>
 
 		<a href="{{ url_for('category', category='automobile') }}">
-			<img src="{{ url_for('static', filename='categories_photos/automobileicon.webp') }}" alt="Automobile Image">
+			<img src="{{ url_for('static', filename='categories_photos/automobileicon.png') }}" alt="Automobile Image">
 			<span>Automobile</span>
 		</a>
 
 		<a href="{{ url_for('category', category='servicii') }}">
 			<img src="{{ url_for('static', filename='categories_photos/servicii.png') }}" alt="Servicii Image">
-			<span>Servicii</span>
+			<span>Services</span>
 		</a>
+
+		<a href="{{ url_for('category', category='electronics') }}">
+			<img src="{{ url_for('static', filename='categories_photos/servicii.png') }}" alt="Servicii Image">
+			<span>Electronics</span>
+		</a>
+
+		<a href="{{ url_for('category', category='pets') }}">
+			<img src="{{ url_for('static', filename='categories_photos/servicii.png') }}" alt="Servicii Image">
+			<span>Pets</span>
+		</a>
+
 		<!-- Categories content -->
 	</div>
 

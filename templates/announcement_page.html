@@ -88,6 +88,34 @@
 			</div>
 		</div>
 		<!-- Add additional content or sections as needed -->
+
+		<div class="announcement-details">
+			<!-- ... existing details ... -->
+	
+			<!-- Comments Section -->
+			<div class="comments-section">
+				<h3>Comments</h3>
+				<!-- Display existing comments -->
+				{% if comments %}
+					<ul class="comments-list">
+						{% for comment in comments %}
+							<li>
+								{{ comment.name }}: {{ comment.text }}
+							</li>
+						{% endfor %}
+					</ul>
+				{% else %}
+					<p>No comments yet.</p>
+				{% endif %}
+	
+				<!-- Form for adding a new comment -->
+				<form action="{{ url_for('announcement_page', announcement_id=announcement.id) }}" method="POST">
+					<textarea name="comment" placeholder="Add a comment"></textarea>
+					<button type="submit">Post Comment</button>
+				</form>
+			</div>
+		</div>
+
 	</main>
 
 	<footer>
