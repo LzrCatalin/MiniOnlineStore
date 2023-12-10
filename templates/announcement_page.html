@@ -107,12 +107,17 @@
 				{% else %}
 					<p>No comments yet.</p>
 				{% endif %}
-	
+				
+				{% if current_user.is_authenticated %}
 				<!-- Form for adding a new comment -->
 				<form action="{{ url_for('announcement_page', announcement_id=announcement.id) }}" method="POST">
 					<textarea name="comment" placeholder="Add a comment"></textarea>
 					<button type="submit">Post Comment</button>
 				</form>
+
+				{% else %}
+					<p>You must be logged in to post comments.</p>
+				{% endif %}
 			</div>
 		</div>
 

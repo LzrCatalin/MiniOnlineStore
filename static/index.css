@@ -1,3 +1,4 @@
+
 /* Reset default margin and padding */
 body,
 html {
@@ -117,4 +118,58 @@ body {
 .categories span {
     display: block;
     margin-top: 5px;
+}
+
+/* For smaller screens */
+@media screen and (max-width: 576px) {
+    /* Adjustments for smaller screens */
+
+    /* Main Navigation */
+    .main-nav {
+        height: auto;
+        padding: 5px; /* Adjust padding for smaller screens */
+        height: auto;
+        flex-direction: column; /* Stack items vertically */
+        align-items: center;
+    }
+
+    .logo_website img {
+        max-width: 80px; /* Adjust logo size for smaller screens */
+    }
+
+    .user_actions {
+        flex-direction: column; /* Stack user actions vertically */
+        align-items: center;
+        margin-top: 10px; /* Add spacing between user actions */
+    }
+
+    .user_actions a img {
+        margin: 5px; /* Adjust spacing between user action icons */
+    }
+
+    /* Separator */
+    .separator {
+        margin: 5px 0; /* Adjust separator margin */
+    }
+
+    /* Search Container */
+    .search-container {
+        padding: 5px; /* Adjust padding for smaller screens */
+    }
+
+    .search-bar input[type="text"],
+    .search-bar select {
+        padding: 6px;
+        margin-right: 5px; /* Adjust input margin */
+    }
+
+    .search-btn {
+        padding: 6px 10px; /* Adjust button padding */
+    }
+
+    /* Category Styles */
+    .categories a {
+        width: 45%; /* Adjust category width for smaller screens */
+        margin: 0 5px 20px; /* Adjust margins for smaller screens */
+    }
 }

@@ -18,26 +18,15 @@
 			</a>
 		</div>
 		<div class="user_actions">
-			{% if current_user.is_authenticated %}
 			<div class="user-profile">
 				<a href="{{ url_for('myprofile') }}" class="profile-link">
 					<p>Hi, <span id="username">{{ user.name }}</span></p>
-					{% if img_str %}
 					<img src="data:image/jpeg;base64,{{ img_str }}" alt="User Profile">
-					{% endif %}
 				</a>
 			</div>
 			<a href="{{ url_for('logout') }}">
 				<img src="{{ url_for('static', filename='icons/logout.png') }}" alt="Logout">
 			</a>
-			{% else %}
-			<a href="{{ url_for('login') }}">
-				<img src="{{ url_for('static', filename='icons/login.png') }}" alt="Login">
-			</a>
-			<a href="{{ url_for('register') }}">
-				<img src="{{ url_for('static', filename='icons/register.png') }}" alt="Register">
-			</a>
-			{% endif %}
 			<a href="{{ url_for('add_announcement') }}">
 				<img src="{{ url_for('static', filename='icons/add_announcement.png') }}" alt="Add Announcement">
 			</a>
@@ -48,42 +37,41 @@
 	<div class="separator"></div>
 
 	<h1>Welcome, <span id="username">{{ user.name }}</span></h1>
-	<p>Email: <span id="useremail">{{ user.email }}</span></p>
 	<!-- Display other user information as needed -->
 
 	<div id="profilePic">
-		<!-- Check if the image data is available -->
-		{% if img_str %}
 		<img id="profileImage" src="data:image/jpeg;base64,{{ img_str }}" alt="Profile Picture">
-		{% else %}
-		<p>No profile picture available</p>
-		{% endif %}
 	</div>
+	
 
 	<!-- User data section container -->
 	<div class="user-data">
 		<h2>Announcement History</h2>
-		<table>
-			<thead>
-				<tr>
-					<th>Category</th>
-					<th>Name</th>
-					<th>Description</th>
-					<!-- Add more columns if needed -->
-				</tr>
-			</thead>
-			<tbody>
-				<!-- Loop through user's announcements and display each announcement -->
-				{% for announcement in announcements_data %}
-				<tr>
-					<td>{{ announcement[0] }}</td>
-					<td>{{ announcement[1] }}</td>
-					<td>{{ announcement[2] }}</td>
-					<!-- Add more cells with announcement details -->
-				</tr>
-				{% endfor %}
-			</tbody>
-		</table>
+		{% if announcements_data %}
+			<table>
+				<thead>
+					<tr>
+						<th>Category</th>
+						<th>Name</th>
+						<th>Description</th>
+						<!-- Add more columns if needed -->
+					</tr>
+				</thead>
+				<tbody>
+					<!-- Loop through user's announcements and display each announcement -->
+					{% for announcement in announcements_data %}
+					<tr>
+						<td>{{ announcement[0] }}</td>
+						<td>{{ announcement[1] }}</td>
+						<td>{{ announcement[2] }}</td>
+						<!-- Add more cells with announcement details -->
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% else %}
+			<p>No announcements to display</p>
+		{% endif %}
 	</div>
 
 	<script src="static/myprofile.js"></script> <!-- Link to your JavaScript file -->

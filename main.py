@@ -194,7 +194,7 @@ def confirm_email(token):
 		if user_data and len(user_data) > 0:
 			user = {
 				'name': user_data[1],
-				'email': user_data[2],
+				'email': user_data[2]
 			}
 
 			return render_template('confirmation.html', user = user)
@@ -242,29 +242,30 @@ def myprofile():
 			
 			print("PRINTEZ")
 			print(user_info[0])
-			
-			#
-			#	Get tuple of announcements
-			#
-			announcements_data = announcement_db.retrieveAnnouncementsFromAnnTableByIdUser(user_info[0])
-			#
-			#	Convert the image to base64 for displaying it in the HTML
-			#
-			if user['photo'] and len(announcements_data) > 0:
-				image = Image.open(io.BytesIO(user['photo']))
-				# Convert to RGB mode if the image mode is 'P' (palette mode)
-				if image.mode != 'RGB':
-					image = image.convert('RGB')
 
-				buffered = io.BytesIO()
-				image.save(buffered, format="JPEG") 
-				img_str = base64.b64encode(buffered.getvalue()).decode()
+		announcements_data = None	
+		#
+		#	Get tuple of announcements
+		#
+		announcements_data = announcement_db.retrieveAnnouncementsFromAnnTableByIdUser(user_info[0])
+		#
+		#	Convert the image to base64 for displaying it in the HTML
+		#
 
-				return render_template('myprofile.html', user=user, img_str=img_str, announcements_data = announcements_data)
-			else:
-				return render_template('myprofile.html', user=user, img_str=None, announcements_data = announcements_data)
-		else:
-			return render_template('error.html', message="User data not found. Please log in again.")
+		img_str = None
+
+		if user['photo']:
+			image = Image.open(io.BytesIO(user['photo']))
+			# Convert to RGB mode if the image mode is 'P' (palette mode)
+			if image.mode != 'RGB':
+				image = image.convert('RGB')
+
+			buffered = io.BytesIO()
+			image.save(buffered, format="JPEG") 
+			img_str = base64.b64encode(buffered.getvalue()).decode()
+
+			return render_template('myprofile.html', user=user, img_str=img_str, announcements_data = announcements_data)
+		
 	else:
 		return redirect(url_for('login'))
 
@@ -783,7 +784,7 @@ def send_new_comment_on_announcement(email, name, category, comment_text):
 		print(f"Failed to send notification email: {str(e)}")
 
 #
-#	Mail message for reply
+#	Mail message for reply : 
 #
 def send_new_reply_on_comment(email, name, category, reply_text):
 	subject = "New notification"

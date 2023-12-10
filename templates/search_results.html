@@ -56,9 +56,11 @@
 				<input type="text" name="query" placeholder="Search..." value="{{ query }}">
 				<select name="category">
 					<option value="all" {% if category == 'all' %}selected{% endif %}>All Categories</option>
-					<option value="imobiliare" {% if category == 'imobiliare' %}selected{% endif %}>Imobiliare</option>
+					<option value="imobiliare" {% if category == 'imobiliare' %}selected{% endif %}>Real Estate</option>
 					<option value="automobile" {% if category == 'automobile' %}selected{% endif %}>Automobile</option>
-					<option value="servicii" {% if category == 'servicii' %}selected{% endif %}>Servicii</option>
+					<option value="servicii" {% if category == 'servicii' %}selected{% endif %}>Services</option>
+					<option value="electronics" {% if category == 'electronics' %}selected{% endif %}>Electronics</option>
+					<option value="pets" {% if category == 'pets' %}selected{% endif %}>Pets</option>
 					<!-- Add more options as needed -->
 				</select>
 				<button type="submit" class="search-btn">!<i class="fa fa-search"></i></button>
