@@ -1,0 +1,283 @@
+/* General Reset */
+body,
+html {
+	margin: 0;
+	padding: 0;
+}
+
+/* Global Styles */
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f2f2f2;
+	color: #333;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+}
+
+/* Navigation Styles */
+.main-nav {
+	width: 100%;
+	background-color: #fff;
+	padding: 10px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 75px;
+	max-width: 1200px;
+}
+
+.logo_website img {
+	max-width: 100px;
+}
+
+.user_actions {
+	display: flex;
+	align-items: center;
+}
+
+.user_actions a img {
+	width: 30px;
+	margin-left: 10px;
+}
+
+/* Separator Styles */
+.separator {
+	width: 100%;
+	height: 1px;
+	background-color: #ccc;
+	margin: 10px 0;
+}
+
+/* Search Container Styles */
+.search-container {
+	width: 100%;
+	background-color: #fff;
+	padding: 10px;
+	max-width: 1200px;
+}
+
+.search-bar {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.search-bar input[type="text"],
+.search-bar select {
+	padding: 8px;
+	margin-right: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.search-btn {
+	padding: 8px 12px;
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+/* Category Styles */
+.category-title {
+	font-size: 1.2em;
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+
+.categories {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	max-width: 1200px;
+	width: 100%;
+}
+
+.categories a {
+	text-decoration: none;
+	color: #333;
+	text-align: center;
+	width: 30%;
+	margin: 0 10px 40px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.categories a img {
+	max-width: 100px;
+	margin-bottom: 10px;
+}
+
+/* Footer Styles */
+.footer {
+	text-align: center;
+	padding: 2.5px;
+	background-color: transparent;
+	margin-top: 0px;
+}
+
+/* For smaller screens */
+@media screen and (max-width: 768px) {
+	/* Adjustments for smaller screens */
+	.main-nav {
+		height: auto;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.logo_website img {
+		max-width: 80px;
+	}
+
+	.user_actions {
+		flex-direction: column;
+		align-items: center;
+		margin-top: 10px;
+	}
+
+	.user_actions a img {
+		margin: 5px;
+	}
+
+	/* Hide the navigation links by default */
+	.nav-links {
+		display: none;
+	}
+
+	/* Style for the hamburger menu */
+	.hamburger {
+		display: block;
+		cursor: pointer;
+	}
+
+	/* Styling the navigation when expanded */
+	.expanded {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.expanded .nav-links {
+		display: block;
+		margin: 10px 0;
+	}
+
+	/* Style for the navigation links in smaller screens */
+	.nav-links a {
+		display: block;
+		margin: 5px 0;
+		text-align: center;
+		width: 100%;
+	}
+}
+
+
+
+/* Additional Announcement Page Styles */
+.announcement-details {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 20px;
+}
+
+.announcement-image {
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 20px;
+	margin-top: 20px;
+	overflow-x: auto;
+}
+
+.announcement-image img {
+	max-width: 150px;
+	max-height: 100px;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: transform 0.3s ease-in-out;
+}
+
+.announcement-image img:hover {
+	transform: scale(1.1);
+}
+
+.announcement-info {
+	text-align: center;
+	margin-top: 20px;
+	max-width: 1200px;
+}
+
+.announcement-info h2 {
+	margin-bottom: 10px;
+}
+
+.announcement-info p {
+	margin-bottom: 8px;
+}
+
+.comments-section {
+	margin-top: 20px;
+	text-align: center;
+}
+
+.comments-section h3 {
+	margin-bottom: 10px;
+}
+
+.comments-list {
+	list-style: none;
+	padding: 0;
+}
+
+.comments-list li {
+	margin-bottom: 8px;
+}
+
+/* Modal Styles */
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 9999;
+	padding-top: 100px;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgb(0, 0, 0);
+	background-color: rgba(0, 0, 0, 0.9);
+}
+
+.modal-content {
+	margin: auto;
+	display: block;
+	width: 80%;
+	max-width: 800px;
+	max-height: 80%;
+}
+
+.close {
+	position: absolute;
+	top: 15px;
+	right: 35px;
+	color: #f1f1f1;
+	font-size: 40px;
+	font-weight: bold;
+	transition: 0.3s;
+	cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+	color: #bbb;
+	text-decoration: none;
+	cursor: pointer;
+}

@@ -1,200 +1,213 @@
-/* search_results.css */
-
-/* Global Reset */
-html,
+/* Reset default margin and padding */
 body,
-ul,
-ol,
-li,
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-form,
-input,
-select,
-button,
-img {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
+html {
+	margin: 0;
+	padding: 0;
 }
 
+/* Global Styles */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
+	font-family: Arial, sans-serif;
+	background-color: #f2f2f2;
+	color: #333;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+	margin: 0;
 }
 
-/* Navigation Bar Styles */
+/* Navigation Styles */
 .main-nav {
-    background-color: #002f34; /* Adjusted color */
-    padding: 15px 20px; /* Adjusted padding */
-    display: flex;
-    justify-content: space-between; /* Align items on both ends */
-    align-items: center;
+	width: 100%;
+	background-color: #fff;
+	padding: 10px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 75px;
+	max-width: 1200px;
 }
 
-.logo_website a img {
-    width: 100px; /* Adjusted width */
-    height: auto;
+/* Logo Styles */
+.logo_website img {
+	max-width: 100px;
 }
 
+/* User Actions Styles */
 .user_actions {
-    display: flex;
-    gap: 20px; /* Increased gap between icons */
-    align-items: center;
+	display: flex;
+	align-items: center;
 }
 
-.user_actions a,
-.user_actions img {
-    width: 40px; /* Adjusted icon size */
-    height: 40px; /* Adjusted icon size */
-    cursor: pointer;
-    border-radius: 50%; /* Rounded profile picture */
-}
-
-.user_actions button {
-    padding: 8px 16px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    background-color: #ffffff; /* OLX button color */
-    color: rgb(0, 0, 0); /* Button text color */
-}
-
-.user_actions img {
-    width: 40px; /* Adjust icon size */
-    height: 40px; /* Adjust icon size */
-    cursor: pointer;
-}
-
-.user_actions button:hover {
-    background-color: #4f4dbb; /* Hover state color */
+.user_actions a img {
+	width: 30px;
+	margin-left: 10px;
 }
 
 /* Separator Styles */
 .separator {
-    border-bottom: 2px solid #fff; /* Adjusted border */
-    margin: 20px 0;
-}
-
-/* Heading Styles */
-h1,
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #002f34; /* Adjusted color */
+	width: 100%;
+	height: 1px;
+	background-color: #ccc;
+	margin: 10px 0;
 }
 
 /* Search Container Styles */
 .search-container {
-    text-align: center;
-    margin-bottom: 20px;
+	width: 100%;
+	background-color: #fff;
+	padding: 10px;
+	max-width: 1200px;
 }
 
 .search-bar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
-.search-bar input[type="text"] {
-    padding: 8px; /* Adjusted padding */
-    margin-right: 10px;
-    width: 250px; /* Adjusted width */
-    border: 1px solid #ccc;
-    border-radius: 25px; /* Adjusted border radius */
-}
-
+.search-bar input[type="text"],
 .search-bar select {
-    padding: 8px; /* Adjusted padding */
-    border: 1px solid #ccc;
-    border-radius: 25px; /* Adjusted border radius */
+	padding: 8px;
+	margin-right: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
 }
 
 .search-btn {
-    padding: 10px 15px;
-    background-color: #4c2c9d; /* Adjusted color */
-    color: #fff;
-    border: none;
-    border-radius: 25px; /* Adjusted border radius */
-    cursor: pointer;
+	padding: 8px 12px;
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
 }
 
-/* Announcement List Styles */
-.announcement-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
+/* Title Styles */
+h1 {
+	margin-top: 2.5px;
+	margin-bottom: 2.5px;
+	font-size: 2em;
+	font-weight: bold;
+	text-align: center;
+	color: #333;
+	font-family: Arial, sans-serif; /* Change the font family */
 }
 
-.announcement-item {
-    text-decoration: none;
-    color: #002f34; /* Adjusted color */
-    display: block;
-    border: 1px solid #ccc;
-    border-radius: 25px; /* Adjusted border radius */
-    padding: 15px; /* Adjusted padding */
-    transition: all 0.3s ease;
+/* Announcements Styles */
+.ads-container {
+	max-height: 500px; /* Define a maximum height */
+	max-width: 1200px;
+	overflow-y: auto; /* Enable vertical scroll when content exceeds height */
+	padding: 5px; /* Reduced padding */
+	border: 1px solid #ccc; /* Border for the container */
+	border-radius: 8px; /* Rounded corners */
+	margin: 20px 0; /* Margin to separate from other content */
+	display: flex;
+	flex-direction: column;
+	align-items: center; /* Center horizontally */
 }
 
-.announcement-item:hover {
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+.ads-container .announcement-item .announcement-content {
+	text-decoration: none;
+	color: #333;
+	width: 50%; /* Adjusted width */
+	margin: 10px 0; /* Adjusted margin */
+	display: grid;
+	align-items: center;
+	border: 1px solid #ccc;
+	padding: 5px;
+	border-radius: 8px;
+	margin-left: 300px;
+	margin-right: auto;
+	grid-template-columns: 1fr 1fr 1fr;
+	column-gap: 5px;
 }
 
-.announcement-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.ads-container .announcement-item .announcement-content .announcement-image {
+	flex: 0 0 40px; /* Adjusted width for the image container */
+	margin-right: 10px; /* Spacing between image and information */
 }
 
-.announcement-image img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 25px; /* Adjusted border radius */
+.ads-container .announcement-item .announcement-content .announcement-image img {
+	max-width: 100%;
+	max-height: 100%;
+	border-radius: 4px; /* Adding rounded corners to the image */
 }
 
-.details {
-    flex: 1;
-    margin-left: 15px; /* Adjusted margin */
+.ads-container .announcement-item .announcement-content .details {
+	/* Display information in the right of the image */
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 }
 
-.details h2 {
-    margin-bottom: 10px; /* Adjusted margin */
-    color: #002f34; /* Adjusted color */
-    font-size: 20px; /* Adjusted font size */
+.ads-container .announcement-item .announcement-content .details h2 {
+	margin: 3px 0; /* Adjusted text margins */
+	font-size: 0.9em; /* Reduced font size */
+	color: inherit;
+	background-color: transparent;
+	margin-bottom: 75px;
 }
 
-.details p {
-    margin-bottom: 15px; /* Adjusted margin */
-    color: #333; /* Adjusted color */
+.ads-container .announcement-item .announcement-content .details p {
+	margin: 3px 0; /* Adjusted text margins */
+	font-size: 0.9em; /* Reduced font size */
+	color: inherit;
+	background-color: transparent;
+	margin-top: 5px;
 }
 
-.details span {
-    font-weight: bold;
-    color: #4c2c9d; /* Adjusted color */
+.footer {
+	text-align: center;
+	padding: 2.5px;
+	background-color: transparent;
+	box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Responsive Styles */
-@media screen and (max-width: 768px) {
-    .search-bar {
-        flex-direction: column;
-        align-items: stretch;
-    }
+@media screen and (max-width: 576px) {
+	/* Adjustments for smaller screens */
+	.main-nav {
+		height: auto;
+		padding: 5px;
+		height: auto;
+		flex-direction: column;
+		align-items: center;
+	}
 
-    .search-bar input[type="text"],
-    .search-bar select {
-        width: 100%;
-        margin: 10px 0;
-    }
+	.logo_website img {
+		max-width: 80px;
+	}
+
+	.user_actions {
+		flex-direction: column;
+		align-items: center;
+		margin-top: 10px;
+	}
+
+	.user_actions a img {
+		margin: 5px;
+	}
+
+	.separator {
+		margin: 5px 0;
+	}
+
+	.search-container {
+		padding: 5px;
+	}
+
+	.search-bar input[type="text"],
+	.search-bar select {
+		padding: 6px;
+		margin-right: 5px;
+	}
+
+	.search-btn {
+		padding: 6px 10px;
+	}
 }

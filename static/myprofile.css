@@ -1,129 +1,159 @@
-/* myprofile.css */
-
-/* Global Reset */
-/* ... (same as before) */
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
-    line-height: 1.6;
+/* Reset default margin and padding */
+body,
+html {
     margin: 0;
     padding: 0;
 }
 
-/* Navigation Bar Styles */
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2; /* Set your desired background color */
+    color: #333; /* Set your desired text color */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Center content vertically */
+}
+
+/* Navigation Styles */
 .main-nav {
-    background-color: #002f34;
-    padding: 15px 20px;
+    width: 100%;
+    background-color: #fff; /* Set your desired background color */
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add shadow if needed */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Adding shadow for depth */
+    height: 75px;
+    max-width: 1200px;
 }
 
-.logo_website a img {
-    width: 100px;
-    height: auto;
+.logo_website img {
+    max-width: 100px; /* Set your logo's max width */
 }
 
 .user_actions {
     display: flex;
-    gap: 20px;
     align-items: center;
 }
 
-.user_actions a,
-.user_actions img,
-.user_actions button {
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    border-radius: 50%;
-}
-
-.user_actions button {
-    background-color: #ffffff;
-    color: #002f34;
-    border: none;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.user_actions img {
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-}
-
-.user_actions button:hover {
-    background-color: #4f4dbb;
-    color: #ffffff;
+.user_actions a img {
+    width: 30px; /* Set width for user action icons */
+    margin-left: 10px; /* Adjust spacing between icons */
 }
 
 /* Separator Styles */
 .separator {
-    border-bottom: 2px solid #fff;
-    margin: 20px 0;
+    width: 100%;
+    height: 1px;
+    background-color: #ccc; /* Set your desired separator color */
+    margin: 10px 0;
 }
 
-/* Heading Styles */
-h1,
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #002f34;
+/* Profile Heading */
+h1 {
+    font-size: 36px;
+    font-weight: 400;
+    color: #333;
 }
 
-/* Profile Section Styles */
+/* User Profile Image */
 #profilePic {
-    text-align: center;
-    margin-bottom: 20px;
+    margin: 20px; /* Adjust margins as needed */
 }
 
 #profileImage {
-    max-width: 100%;
-    height: auto;
-    border-radius: 15px; /* Rounded corners */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Adding shadow for depth */
+    max-width: 200px; /* Set max-width for the profile image */
+    border-radius: 50%; /* Make the image circular */
 }
 
+/* User Data Section Container */
 .user-data {
-    margin: 20px;
+    text-align: center;
+    margin-top: 20px; /* Adjust margin-top as needed */
 }
 
 .user-data h2 {
-    font-size: 24px;
-    color: #002f34;
-    margin-bottom: 15px;
+    font-size: 24px; /* Set your desired font size */
+    margin-bottom: 10px; /* Adjust margin as needed */
 }
 
+/* Table Styles */
+.announcement-scroll {
+    max-height: 300px; /* Set the maximum height for the scrollable area */
+    overflow-y: auto; /* Enable vertical scrolling */
+    border: 1px solid #ccc; /* Optional: Add a border for visibility */
+    margin-bottom: 20px; /* Adjust margin as needed */
+    padding: 10px; /* Optional: Add padding for better spacing */
+}
+
+/* Table styles */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 20px;
 }
 
-table th,
-table td {
-    border: 1px solid #ccc;
-    padding: 10px;
-    text-align: left;
+table, th, td {
+    border: 1px solid #ddd; /* Set your desired border styles */
+    padding: 8px; /* Set padding for table cells */
+    text-align: left; /* Set text alignment */
 }
 
-/* Responsive Styles */
-@media screen and (max-width: 768px) {
+th,
+td {
+    padding: 8px;
+    border: 1px solid #ccc; /* Set your desired table border color */
+}
+
+thead {
+    background-color: #f2f2f2; /* Set your desired table header background color */
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Set even row background color */
+}
+
+tbody tr:hover {
+    background-color: #eaeaea; /* Set row hover background color */
+}
+
+/* Footer Styles */
+.footer {
+	text-align: center;
+	padding: 2.5px;
+	background-color: transparent;
+    margin-bottom: 5px;
+}
+
+/* Responsive Styles for Smaller Screens */
+@media screen and (max-width: 576px) {
+    /* Adjustments for smaller screens */
     .main-nav {
-        padding: 10px;
+        height: auto;
+        padding: 5px; /* Adjust padding for smaller screens */
+        flex-direction: column; /* Stack items vertically */
+        align-items: center;
     }
 
-    .logo_website a img {
-        width: 80px;
+    .logo_website img {
+        max-width: 80px; /* Adjust logo size for smaller screens */
     }
 
-    .user_actions a,
-    .user_actions img,
-    .user_actions button {
-        width: 30px;
-        height: 30px;
+    .user_actions {
+        flex-direction: column; /* Stack user actions vertically */
+        align-items: center;
+        margin-top: 10px; /* Add spacing between user actions */
     }
+
+    .user_actions a img {
+        margin: 5px; /* Adjust spacing between user action icons */
+    }
+
+    .separator {
+        margin: 5px 0; /* Adjust separator margin */
+    }
+
+    /* Additional responsive styles can be added here */
 }

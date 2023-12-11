@@ -131,4 +131,3 @@ if __name__ == '__main__':
 	commentsdb = CommentDatabase("src/data_bases/comments_database.db")
 	commentsdb.connect()
 	commentsdb.commentsTableExists()
-	commentsdb.insertCommentIntoCommentsTable(1, 1, "This is a comment")

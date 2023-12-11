@@ -255,7 +255,7 @@ class AnnouncementDataBase:
 			if self.announcement_exists_by_id_user(id_user):  # Call the existence check directly
 				with self.connect() as connect:
 					cursor = connect.cursor()
-					cursor.execute("SELECT category, name, description, price FROM announcements WHERE id_user=?", (id_user,))
+					cursor.execute("SELECT id, category, name, description, price FROM announcements WHERE id_user=?", (id_user,))
 					announcements = cursor.fetchall()
 					print("Announcements retrieved successfully from announcements_database")
 					return announcements

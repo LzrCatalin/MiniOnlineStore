@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<link href="static/register_style.css" rel="stylesheet" type="text/css" media="all">
+	<link href="static/add_ad.css" rel="stylesheet" type="text/css" media="all">
 	<title>Add announcement</title>
 </head>
 <body>
+	<canvas id="canvas"></canvas>
 	<div class="container">
-		<h1>Add announcement</h1>
 		<div class="box">
+			<h1>Add announcement</h1>
 			<form action="/add_announcement" method="post" enctype="multipart/form-data">
 				<label for="category">category:</label>
 				<input type="text" name="category" id="category" placeholder="category" required/>
@@ -34,7 +35,13 @@
 				<br>
 				<input type="submit" class="button" value="Register Announcement"/>
 			</form>
+
+			{% if error_message %}
+				<p class="error-message">{{ error_message }}</p>
+			{% endif %}
+
 		</div>
 	</div>
+	<script src="static/add_ad.js"></script>
 </body>
 </html>

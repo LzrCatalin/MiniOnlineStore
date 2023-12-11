@@ -14,7 +14,7 @@
 		<!--Nav Bar-->
 		<div class="logo_website">
 			<a href="{{ url_for('index') }}">
-				<img src="{{ url_for('static', filename='link') }}" alt="Logo">
+				<img src="{{ url_for('static', filename='icons/logo.jpg') }}" alt="Logo">
 			</a>
 		</div>
 		<div class="user_actions">
@@ -48,33 +48,40 @@
 	<div class="user-data">
 		<h2>Announcement History</h2>
 		{% if announcements_data %}
-			<table>
-				<thead>
-					<tr>
-						<th>Category</th>
-						<th>Name</th>
-						<th>Description</th>
-						<!-- Add more columns if needed -->
-					</tr>
-				</thead>
-				<tbody>
-					<!-- Loop through user's announcements and display each announcement -->
-					{% for announcement in announcements_data %}
-					<tr>
-						<td>{{ announcement[0] }}</td>
-						<td>{{ announcement[1] }}</td>
-						<td>{{ announcement[2] }}</td>
-						<!-- Add more cells with announcement details -->
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
+			<div class="announcement-scroll">
+				<table>
+					<thead>
+						<tr>
+							<th>Category</th>
+							<th>Name</th>
+							<th>Description</th>
+							<!-- Add more columns if needed -->
+						</tr>
+					</thead>
+					<tbody>
+						<!-- Loop through user's announcements and display each announcement -->
+						{% for announcement in announcements_data %}
+						<tr>
+							<td>{{ announcement[1] }}</a></td>
+							<td><a href="{{ url_for('announcement_page', announcement_id=announcement[0]) }}">{{ announcement[2] }}</a></td>
+							<td>{{ announcement[3] }}</td>
+							<!-- Add more cells with announcement details -->
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
 		{% else %}
 			<p>No announcements to display</p>
 		{% endif %}
 	</div>
 
 	<script src="static/myprofile.js"></script> <!-- Link to your JavaScript file -->
+
+	<footer class="footer">
+		<p>&copy; 2023 Announcements Website. All rights reserved.</p>
+	</footer>
+
 </body>
 
 </html>

@@ -6,9 +6,10 @@
 	<title>Register</title>
 </head>
 <body>
+	<canvas id="canvas"></canvas>
 	<div class="container">
-		<h1>Sign Up</h1>
 		<div class="box">
+			<h1>Sign Up</h1>
 			<form action="/register" method="post" enctype="multipart/form-data">
 				<label for="username">Username:</label>
 				<input type="text" name="username" id="username" placeholder="Enter username" required/>
@@ -35,8 +36,8 @@
 
 			<!-- Added message and link for login -->
 			<p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
-
 		</div>
 	</div>
+	<script src="static/register.js"></script>
 </body>
 </html>

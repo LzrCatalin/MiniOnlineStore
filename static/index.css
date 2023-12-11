@@ -1,175 +1,224 @@
-
 /* Reset default margin and padding */
 body,
 html {
-    margin: 0;
-    padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 /* Global Styles */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f2f2f2; /* Set your desired background color */
-    color: #333; /* Set your desired text color */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh; /* Center content vertically */
+	font-family: Arial, sans-serif;
+	background-color: #f2f2f2;
+	color: #333;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
 }
 
 /* Navigation Styles */
 .main-nav {
-    width: 100%;
-    background-color: #fff; /* Set your desired background color */
-    padding: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add shadow if needed */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-	height: 100px;
-    max-width: 1200px;
+	width: 100%;
+	background-color: #fff;
+	padding: 10px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 75px;
+	max-width: 1200px;
 }
 
 .logo_website img {
-    max-width: 100px; /* Set your logo's max width */
+	max-width: 100px;
 }
 
 .user_actions {
-    display: flex;
-    align-items: center;
+	display: flex;
+	align-items: center;
 }
 
 .user_actions a img {
-    width: 30px; /* Set width for user action icons */
-    margin-left: 10px; /* Adjust spacing between icons */
+	width: 30px;
+	margin-left: 10px;
 }
 
 /* Separator Styles */
 .separator {
-    width: 100%;
-    height: 1px;
-    background-color: #ccc; /* Set your desired separator color */
-    margin: 10px 0;
+	width: 100%;
+	height: 1px;
+	background-color: #ccc;
+	margin: 10px 0;
 }
 
 /* Search Container Styles */
 .search-container {
-    width: 100%;
-    background-color: #fff; /* Set your desired background color */
-    padding: 10px;
-    max-width: 1200px;
+	width: 100%;
+	background-color: #fff;
+	padding: 10px;
+	max-width: 1200px;
 }
 
 .search-bar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .search-bar input[type="text"],
 .search-bar select {
-    padding: 8px;
-    margin-right: 10px;
-    border: 1px solid #ccc; /* Set your desired input border color */
-    border-radius: 4px; /* Add border radius if needed */
+	padding: 8px;
+	margin-right: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
 }
 
 .search-btn {
-    padding: 8px 12px;
-    background-color: #007bff; /* Set your desired button background color */
-    color: #fff; /* Set your desired button text color */
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+	padding: 8px 12px;
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
 }
 
 /* Category Styles */
 .category-title {
-    font-size: 1.2em; /* Set your desired font size */
-    font-weight: bold;
-    margin-bottom: 20px;
+	font-size: 1.2em;
+	font-weight: bold;
+	margin-bottom: 20px;
 }
 
 .categories {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    max-width: 1200px;
-    width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	max-width: 1200px;
+	width: 100%;
 }
 
 .categories a {
-    text-decoration: none;
-    color: #333;
-    text-align: center;
-    width: 30%;
-    margin: 0 10px 40px; /* Increased bottom margin for more space */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+	text-decoration: none;
+	color: #333;
+	text-align: center;
+	width: 30%;
+	margin: 0 10px 40px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .categories a img {
-    max-width: 100px; /* Set your category image max width */
-    margin-bottom: 10px;
+	max-width: 100px;
+	margin-bottom: 10px;
 }
 
-.categories span {
-    display: block;
-    margin-top: 5px;
+/* Footer Styles */
+.footer {
+	text-align: center;
+	padding: 2.5px;
+	background-color: transparent;
+	margin-top: 250px;
 }
 
 /* For smaller screens */
 @media screen and (max-width: 576px) {
-    /* Adjustments for smaller screens */
+	/* Adjustments for smaller screens */
+	.main-nav {
+		height: auto;
+		padding: auto;
+		height: auto;
+		flex-direction: column;
+		align-items: center;
+	}
 
-    /* Main Navigation */
-    .main-nav {
-        height: auto;
-        padding: 5px; /* Adjust padding for smaller screens */
-        height: auto;
-        flex-direction: column; /* Stack items vertically */
-        align-items: center;
-    }
+	.logo_website img {
+		max-width: 80px;
+	}
 
-    .logo_website img {
-        max-width: 80px; /* Adjust logo size for smaller screens */
-    }
+	.user_actions {
+		flex-direction: column;
+		align-items: center;
+		margin-top: 10px;
+	}
 
-    .user_actions {
-        flex-direction: column; /* Stack user actions vertically */
-        align-items: center;
-        margin-top: 10px; /* Add spacing between user actions */
-    }
+	.user_actions a img {
+		margin: 5px;
+	}
 
-    .user_actions a img {
-        margin: 5px; /* Adjust spacing between user action icons */
-    }
+	.separator {
+		margin: 5px 0;
+	}
 
-    /* Separator */
-    .separator {
-        margin: 5px 0; /* Adjust separator margin */
-    }
+	.search-container {
+		padding: 5px;
+	}
 
-    /* Search Container */
-    .search-container {
-        padding: 5px; /* Adjust padding for smaller screens */
-    }
+	.search-bar input[type="text"],
+	.search-bar select {
+		padding: 6px;
+		margin-right: 5px;
+	}
 
-    .search-bar input[type="text"],
-    .search-bar select {
-        padding: 6px;
-        margin-right: 5px; /* Adjust input margin */
-    }
+	.search-btn {
+		padding: 6px 10px;
+	}
 
-    .search-btn {
-        padding: 6px 10px; /* Adjust button padding */
-    }
-
-    /* Category Styles */
-    .categories a {
-        width: 45%; /* Adjust category width for smaller screens */
-        margin: 0 5px 20px; /* Adjust margins for smaller screens */
-    }
+	.categories a {
+		width: 45%;
+		margin: 0 5px 20px;
+	}
 }
+
+/* Additional Announcement Page Styles */
+.announcement-details {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.announcement-image {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	overflow-x: auto;
+}
+
+.announcement-image img {
+	max-width: 150px;
+	margin: 10px;
+	border-radius: 6px;
+}
+
+.announcement-info {
+	text-align: center;
+	margin-top: 20px;
+}
+
+.announcement-info h2 {
+	margin-bottom: 10px;
+}
+
+.announcement-info p {
+	margin-bottom: 8px;
+}
+
+.comments-section {
+	margin-top: 20px;
+	text-align: center;
+}
+
+.comments-section h3 {
+	margin-bottom: 10px;
+}
+
+.comments-list {
+	list-style: none;
+	padding: 0;
+}
+
+.comments-list li {
+	margin-bottom: 8px;
+}
+

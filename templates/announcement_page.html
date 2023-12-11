@@ -5,14 +5,15 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Announcement Details</title>
-	<!-- Add your CSS stylesheets or links here -->
+	<link rel="stylesheet" href="static/announcement_page.css"> <!-- Link to your CSS file -->
+	<script src="static/announcement_page.js"></script> <!-- Link to your JS file -->
 </head>
 
 <nav class="main-nav">
 	<!--Nav Bar-->
 	<div class="logo_website">
 		<a href="{{ url_for('index') }}">
-			<img src="{{ url_for('static', filename='link') }}" alt="Logo">
+			<img src="{{ url_for('static', filename='icons/logo.jpg') }}" alt="Logo">
 		</a>
 	</div>
 	<div class="user_actions">
@@ -36,6 +37,8 @@
 		</a>
 		{% endif %}
 	</a>
+
+	
 	<a href="{{ url_for('add_announcement') }}">
 		<img src="{{ url_for('static', filename='icons/add_announcement.png') }}" alt="Add Announcement">
 	</a>
@@ -75,10 +78,26 @@
 		<div class="announcement-details">
 			<div class="announcement-image">
 				<img src="data:image/jpeg;base64,{{ announcement.main_photo }}" alt="Main Image">
-				<img src="data:image/jpeg;base64,{{ announcement.secondary_photo1 }}" alt="Main Image">
-				<img src="data:image/jpeg;base64,{{ announcement.secondary_photo2 }}" alt="Main Image">
-				<img src="data:image/jpeg;base64,{{ announcement.secondary_photo3 }}" alt="Main Image">
+				
+				{% if announcement.secondary_photo1 %}
+						<img src="data:image/jpeg;base64,{{ announcement.secondary_photo1 }}" alt="Secondary Image">
+				{% endif %}
+				
+				{% if announcement.secondary_photo2 %}
+						<img src="data:image/jpeg;base64,{{ announcement.secondary_photo2 }}" alt="Secondary Image">
+				{% endif %}
+				
+				{% if announcement.secondary_photo3 %}
+						<img src="data:image/jpeg;base64,{{ announcement.secondary_photo3 }}" alt="Secondary Image">
+				{% endif %}
+
 			</div>
+
+			<div id="imageModal" class="modal">
+				<span class="close">&times;</span>
+				<img class="modal-content" id="expandedImg">
+			</div>
+			
 			<div class="announcement-info">
 				<h2>Announcement Title: {{ announcement.name }}</h2>
 				<p>Description: {{ announcement.description }}</p>
@@ -87,44 +106,46 @@
 				<!-- Display other details about the announcement -->
 			</div>
 		</div>
+
+		
 		<!-- Add additional content or sections as needed -->
 
-		<div class="announcement-details">
+		<div class="announcement-details"></div>
 			<!-- ... existing details ... -->
 	
-			<!-- Comments Section -->
-			<div class="comments-section">
-				<h3>Comments</h3>
-				<!-- Display existing comments -->
-				{% if comments %}
-					<ul class="comments-list">
-						{% for comment in comments %}
-							<li>
-								{{ comment.name }}: {{ comment.text }}
-							</li>
-						{% endfor %}
-					</ul>
-				{% else %}
-					<p>No comments yet.</p>
-				{% endif %}
-				
-				{% if current_user.is_authenticated %}
-				<!-- Form for adding a new comment -->
-				<form action="{{ url_for('announcement_page', announcement_id=announcement.id) }}" method="POST">
-					<textarea name="comment" placeholder="Add a comment"></textarea>
-					<button type="submit">Post Comment</button>
-				</form>
+		<!-- Comments Section -->
+		<div class="comments-section">
+			<h3>Comments</h3>
+			<!-- Display existing comments -->
+			{% if comments %}
+				<ul class="comments-list">
+					{% for comment in comments %}
+						<li>
+							{{ comment.name }}: {{ comment.text }}
+						</li>
+					{% endfor %}
+				</ul>
+			{% else %}
+				<p>No comments yet.</p>
+			{% endif %}
+			
+			{% if current_user.is_authenticated %}
+			<!-- Form for adding a new comment -->
+			<form action="{{ url_for('announcement_page', announcement_id=announcement.id) }}" method="POST">
+				<textarea name="comment" placeholder="Add a comment"></textarea>
+				<button type="submit">Post Comment</button>
+			</form>
 
-				{% else %}
-					<p>You must be logged in to post comments.</p>
-				{% endif %}
-			</div>
+			{% else %}
+				<p>You must be logged in to post comments.</p>
+			{% endif %}
+			
 		</div>
 
 	</main>
 
-	<footer>
-		<!-- Footer content -->
+	<footer class="footer">
+		<p>&copy; 2023 Announcements Website. All rights reserved.</p>
 	</footer>
 </body>
 

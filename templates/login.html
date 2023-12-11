@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<link href="static/login_style.css" rel="stylesheet" type="text/css" media="all">
-	<title>Login Form</title>
+    <link href="static/login_style.css" rel="stylesheet" type="text/css" media="all">
+    <title>Login Form</title>
 </head>
 <body>
-	<div class="container">
-		<div class="box">
-			<h2>Login</h2>
-			<form action="/login" method="post">
-				<input type="text" name="username" id="username" placeholder="Username" required/>
-				<br>
-				<input type="password" name="password" id="password" placeholder="Password" required/>
-				<br>
-				<input type="submit" class="button" value="Log In"/>
-			</form>
-			<!-- Removed the registration button and added the message with a link -->
-			<p>Don't have an account? <a href="{{ url_for('register') }}">Create an account</a></p>
+    <canvas id="canvas"></canvas>
+    <div class="container">
+        <div class="box">
+            <h2>Login</h2>
+            <form action="/login" method="post">
+                <input type="text" name="username" id="username" placeholder="Username" required/>
+                <br>
+                <input type="password" name="password" id="password" placeholder="Password" required/>
+                <br>
+                <input type="submit" class="button" value="Log In"/>
+            </form>
+            <!-- Removed the registration button and added the message with a link -->
+            <p>Don't have an account? <a href="{{ url_for('register') }}">Create an account</a></p>
 
-			{% if error_message %}
-				<p class="error-message">{{ error_message }}</p>
-			{% endif %}
-			
-		</div>
-	</div>
+            {% if error_message %}
+                <p class="error-message">{{ error_message }}</p>
+            {% endif %}
+            
+        </div>
+    </div>
+    <script src="static/login_script.js"></script>
 </body>
 </html>

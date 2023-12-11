@@ -252,6 +252,7 @@ def myprofile():
 		#	Convert the image to base64 for displaying it in the HTML
 		#
 
+		print(f"PRINTEZ {announcements_data}")
 		img_str = None
 
 		if user['photo']:
@@ -329,19 +330,26 @@ def add_announcement():
 			secondary_photo_1 = None
 			secondary_photo_2 = None
 			secondary_photo_3 = None
-			if 'secondary_photo_1' in request.files and 'secondary_photo_2' in request.files and 'secondary_photo_3' in request.files:
-				file1 = request.files['secondary_photo_1']
-				file2 = request.files['secondary_photo_2']
-				file3 = request.files['secondary_photo_3']
-				if file1.filename != '' and file2.filename != '' and file3.filename != '':
-					secondary_photo_1 = announcement_db.save_secondary_photo1(file1)
-					secondary_photo_2 = announcement_db.save_secondary_photo2(file2)
-					secondary_photo_3 = announcement_db.save_secondary_photo3(file3)
-			
+
+			if 'secondary_photo_1' in request.files:
+				file = request.files['secondary_photo_1']
+				if file.filename != '':
+					secondary_photo_1 = announcement_db.save_secondary_photo1(file)
+
+			if 'secondary_photo_2' in request.files:
+				file = request.files['secondary_photo_2']
+				if file.filename != '':
+					secondary_photo_2 = announcement_db.save_secondary_photo2(file)
+
+			if 'secondary_photo_3' in request.files:
+				file = request.files['secondary_photo_3']
+				if file.filename != '':
+					secondary_photo_3 = announcement_db.save_secondary_photo3(file)
+
 			# Insert announcement into database
 			if main_photo is not None:
 				if announcement_db.checkAnnouncementForAddIntoDataBase(category, name) == True:
-					return render_template('add_announcement.html', error_message="Announcement with the same category and name already exists in the database.")
+					return render_template('add_announcement.html', error_message="Announcement with the same category and name \nalready exists in the database.")
 				else:
 					announcement_db.insertAnnouncementIntoAnnouncementsTable(id_user, category, name, description, price, main_photo, secondary_photo_1, secondary_photo_2, secondary_photo_3)
 					
@@ -365,6 +373,7 @@ def category():
 	global announcement_db
 	global user_db
 
+	category = None
 	category = request.args.get('category')
 	user = None
 	img_str = None
@@ -579,6 +588,7 @@ def announcement_page():
 						'text': comment_data[3],
 						'replies': replies
 					})
+
 					print(f"Printez numele userului ce a pus comentariu: {comment_publisher[1]}")
 					print(f"Comentariul postat: {comment_data[3]}")
 
