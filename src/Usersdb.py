@@ -288,12 +288,3 @@ class UserDatabase:
 		
 		except sqlite3.Error as error:
 			print("Failed to retrieve from Users table", error)
-
-
-if __name__ == '__main__':
-
-	user_db = UserDatabase("src/data_bases/users_database.db")
-	print("Incep printurile")
-	user = user_db.retrieveUserFromUsersTableById(5)
-	print(user[1])
-	print(user_db.user_exists_by_id(100))

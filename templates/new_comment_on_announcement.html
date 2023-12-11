@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>New Notification</title>
+	<style>
+		/* Your CSS styles here */
+		/* Example styles, you can adjust them as needed */
+		body {
+			margin: 0;
+			font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+			font-size: 1rem;
+			font-weight: 400;
+			line-height: 1.5;
+			color: #212529;
+			text-align: left;
+			background-color: #e9ecef;
+		}
+		/* Other styles... */
+	</style>
+</head>
+<body>
+	<div>
+		<h1>New Notification</h1>
+		<p>
+			Dear User,
+		</p>
+		<p>
+			Your announcement for <strong>'{{ name }}'</strong> in the category <strong>'{{ category }}'</strong> received a new comment.
+		</p>
+		<p>
+			<strong>Comment:</strong> {{ comment_text }}
+		</p>
+		<p>
+			Thank you for using our platform!
+		</p>
+		<p>Best regards,<br />The Platform Team</p>
+	</div>
+</body>
+</html>

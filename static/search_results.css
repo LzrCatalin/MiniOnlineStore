@@ -86,11 +86,10 @@ body {
 	cursor: pointer;
 }
 
-/* Title Styles */
-h1 {
-	margin-top: 2.5px;
-	margin-bottom: 2.5px;
-	font-size: 2em;
+h2 {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	font-size: 1.5em;
 	font-weight: bold;
 	text-align: center;
 	color: #333;

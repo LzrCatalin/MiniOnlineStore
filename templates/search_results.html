@@ -48,8 +48,6 @@
 
 	<div class="separator"></div>
 
-	<h1>Search Results</h1>
-
 	<div class="search-container">
 		<form action="{{ url_for('search_results') }}" method="GET">
 			<div class="search-bar">
@@ -71,6 +69,9 @@
 	<div class="separator"></div>
 
 	<h2>Search Results for '{{ query }}' in '{{ category.capitalize() }}' Category</h2>
+	<p>Number of found announcements: {{ ads_number }}</p>
+
+	<div class="separator"></div>
 
 	<div class="ads-container">
 		<div class="announcement-list">

@@ -404,6 +404,7 @@ def category():
 		print(f"Chosen category: {category}")
 
 		announcements = announcement_db.retrieveAnnouncementsFromAnnTableByCategory(category)
+		ads_number = len(announcements)
 		announcements_list = []
 		
 		for announcement_data in announcements:
@@ -414,6 +415,7 @@ def category():
 				'description': announcement_data[4],
 				'price': announcement_data[5],
 				'main_photo': announcement_data[6] if announcement_data[6] else None
+
 			}
 			
 			ad_publisher = user_db.retrieveUserFromUsersTableById(announcement['id_user'])
@@ -437,7 +439,7 @@ def category():
 
 			announcements_list.append(announcement)
 
-	return render_template('category.html', user=user, img_str=img_str, announcements=announcements_list, category=category, ad_publisher = ad_publisher)
+	return render_template('category.html', user=user, img_str=img_str, announcements=announcements_list, category=category, ad_publisher = ad_publisher, ads_number = ads_number)
 
 #
 #	Announcement page
@@ -650,7 +652,8 @@ def search_results():
 				image.save(buffered, format="JPEG") 
 				img_str = base64.b64encode(buffered.getvalue()).decode()
 				
-	announcements_results = announcement_db.search_announcements(category, query) 
+	announcements_results = announcement_db.search_announcements(category, query)
+	ads_number = len(announcements_results) 
 	announcements_list = []
 
 	for announcement_data in announcements_results:
@@ -683,7 +686,7 @@ def search_results():
 
 		announcements_list.append(announcement)
 
-	return render_template('search_results.html', user=user, img_str=img_str, announcements=announcements_list, query=query, category=category)
+	return render_template('search_results.html', user=user, img_str=img_str, announcements=announcements_list, query=query, category=category, ads_number = ads_number)
 	
 
 @app.route('/test_email')
@@ -753,11 +756,13 @@ def send_registration_email(username, email, confirmation_token):
 	confirmation_link = url_for('confirm_email', token = confirmation_token, _external=True)
 	
 	subject = "Welcome to Our Platform"
-	body = f'Hello, {username}!\n\nThank you for registering on our platform. Please click the following link to confirm your email and activate your account:\n\n{confirmation_link}'
 	sender = "tuyasmartbot@gmail.com"
 
+	html = render_template("registration_success.html", username = username,
+														confirmation_link = confirmation_link)
+
 	try:
-		msg = Message(subject=subject, body = body, sender=sender, recipients=[email])
+		msg = Message(subject=subject, html = html, sender=sender, recipients=[email])
 		mail.send(msg)
 		print("Registration email sent successfully!")
 	except Exception as e:
@@ -766,28 +771,39 @@ def send_registration_email(username, email, confirmation_token):
 #
 #	Mail message after adding announcement
 #
-def send_announcement_added_email(email, category, name, description, price): 
+def send_announcement_added_email(email, category, name, description, price):
+
 	subject = "Your Announcement was Placed Successfully!"
-	body = f"Dear User,\n\nYour announcement for '{name}' in the category '{category}' has been successfully placed on our platform.\n\nDescription: {description}\nPrice: {price}\n\nThank you for using our platform!\n\nBest regards,\nThe Platform Team"
 	sender = "tuyasmartbot@gmail.com"
 
+	html = render_template("announcement_added.html",
+						   	category = category,
+						   	name = name,
+						   	description = description,
+						   	price = price) 
+
 	try:
-		msg = Message(subject=subject, body=body, sender=sender, recipients=[email])
+		msg = Message(subject=subject, html=html, sender=sender, recipients=[email])
 		mail.send(msg)
 		print("Announcement placement email sent successfully!")
 	except Exception as e:
 		print(f"Failed to send announcement placement email: {str(e)}")
 
+
 #
 #	Mail messages for new notifications
 #
 def send_new_comment_on_announcement(email, name, category, comment_text):
+	
 	subject = "New notification"
-	body = f"Dear User,\n\nYour announcement for '{name}' in the category '{category}' received a new comment.\n\nComment: {comment_text}"
 	sender = "tuyasmartbot@gmail.com"
 
+	html = render_template("new_comment_on_announcement.html", name = name,
+																category = category,
+																comment_text = comment_text)
+
 	try:
-		msg = Message(subject=subject, body=body, sender=sender, recipients=[email])
+		msg = Message(subject=subject, html=html, sender=sender, recipients=[email])
 		mail.send(msg)
 		print("Notification mail sent successfully!")
 	except Exception as e:
@@ -824,11 +840,4 @@ if __name__ == '__main__':
 
 	#
 	# TODO : RESOLVE CASE WHEN USER HAVE PHOTO BUT DONT HAVE ANNOUNCEMENTS ('/MYPROFILE')
-	#
-
-	#
-	# ADDED : DISPLAYING FOR EACH AD, THE USER THAT POSTED IT
-	#		: NEW PAGE FOR REDIRECTING USER AFTER REGISTER
-	#		: SEARCH BAR IMPLEMENTATION
-	#		: ANNOUNCEMENT PAGE
 	#

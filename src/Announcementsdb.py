@@ -355,13 +355,18 @@ class AnnouncementDataBase:
 			
 		except sqlite3.Error as error:
 			print("Failed to retrieve from announcements table")
-				
-if __name__ == '__main__':
 
-	# Run my function: category_exists
-	announcement_db = AnnouncementDataBase("src/data_bases/announcements_database.db")
-	#announcement_db.category_exists("imobiliare")
-	#print(announcement_db.retrieveAnnouncementsFromAnnTableByCategory("imobiliare")[3][3])
-	print(announcement_db.retrieveAnnouncementsFromAnnTableById(8)[1])
-	existing_ads = announcement_db.search_announcements('imobiliare', 'mercedes')
-	print(existing_ads[0][3])	
+	#
+	#	Retrieve announcement from database by category and name
+	#
+	def retrieveAnnouncementIdFromDatabaseByCategoryAndName(self, category, name):
+		try:
+			with self.connect() as connect:
+				cursor = connect.cursor()
+				if self.category_exists(category):
+					cursor.execute("SELECT id FROM announcements WHERE category = ? AND name = ?", (category, name))
+					existing_ad = cursor.fetchone()
+					return existing_ad
+				
+		except sqlite3.Error as error:
+			print("Failed to retrieve from announcements table", error)
